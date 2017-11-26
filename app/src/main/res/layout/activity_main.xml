@@ -32,7 +32,7 @@
             android:layout_above="@+id/send_message_layout"
             android:divider="@null" />
 
-        <!-- Message Area -->
+        <!-- Type Message -->
         <LinearLayout
             android:id="@+id/send_message_layout"
             android:layout_width="match_parent"
@@ -55,8 +55,10 @@
                     android:id="@+id/btn_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:onClick="onChatButton"
                     android:src="@drawable/ic_send_black_24dp"
-                    android:text="Send" />
+                    android:text="Send"
+                    android:tint="@android:color/holo_blue_dark" />
         </LinearLayout>
 
 </RelativeLayout>
