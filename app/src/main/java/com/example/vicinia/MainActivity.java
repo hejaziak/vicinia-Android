@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.vicinia.messages.ChatMessage;
 import com.example.vicinia.messages.MessageAdapter;
+import com.example.vicinia.services.LocationService;
 import com.example.vicinia.utilities.ChatUtils;
 
 import java.io.IOException;
@@ -27,6 +28,7 @@ import static com.example.vicinia.utilities.ChatUtils.buildWelcomeUrl;
 import static com.example.vicinia.utilities.ChatUtils.getResponseFromHttpUrl;
 
 public class MainActivity extends AppCompatActivity {
+    LocationService gps;
 
     ListView mChatHistory;
     private static MessageAdapter adapter;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+
+        gps = new LocationService(this);
     }
 
     /**
@@ -70,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
         ChatMessage candidateMessage = new ChatMessage(message, false);
         adapter.add(candidateMessage);
 
+        if(gps != null && gps.canGetLocation()){
+            double lat = gps.getLatitude(); // returns latitude
+            double lng = gps.getLongitude(); // returns longitude
+
+            Toast.makeText(this, lat+", "+lng,Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
