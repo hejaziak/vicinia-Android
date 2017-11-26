@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,11 +24,10 @@ import static com.example.vicinia.utilities.ChatUtils.getResponseFromHttpUrl;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView mTextView;
+    ListView mChatHistory;
 
-    Button mChatButton;
-    Button mWelcomeButton;
-    Button mDetailstButton;
+    EditText mChatMessage;
+    ImageButton mChatButton;
 
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessageDisplay;
@@ -35,31 +37,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextView = (TextView) findViewById(R.id.textView);
-        mWelcomeButton = (Button) findViewById(R.id.welome_button);
-        mChatButton = (Button) findViewById(R.id.chat_button);
-        mDetailstButton = (Button) findViewById(R.id.details_button);
-        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        mChatHistory = findViewById(R.id.chat_history);
 
-        mWelcomeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onWelcomeButton();
-            }
-        });
+        mChatButton = findViewById(R.id.btn_send);
+        mChatMessage = findViewById(R.id.et_message);
+
+        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
         mChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTextView.setText(buildChatUrl().toString());
-            }
-        });
+                String message = mChatMessage.getText().toString();
+                mChatMessage.setText("");
 
-        mDetailstButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTextView.setText(buildDetailsUrl("{placeID}").toString());
+//                mTextView.setText(buildChatUrl().toString());
             }
         });
     }
@@ -71,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void onWelcomeButton() {
         URL url = buildWelcomeUrl();
-        mTextView.setText(url.toString());
+//        mTextView.setText(url.toString());
         new APIQueryTask().execute(url);
     }
 
@@ -81,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showJsonDataView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-        mTextView.setVisibility(View.VISIBLE);
+//        mTextView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -89,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
      * View.
      */
     private void showErrorMessage() {
-        mTextView.setVisibility(View.INVISIBLE);
+//        mTextView.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
@@ -118,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (/* githubSearchResults != null && */ !response.equals("")) {
                 showJsonDataView();
-                mTextView.setText(response);
+//                mTextView.setText(response);
             } else {
                 showErrorMessage();
             }
