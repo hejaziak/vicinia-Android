@@ -56,24 +56,23 @@ public class ChatUtils {
      * @return The URL to use.
      */
     public static URL buildUrl(char function, String placeID) {
-        Uri builtUri = Uri.parse(CHATBOT_BASE_URL);
+        Uri.Builder uriBuilder = Uri.parse(CHATBOT_BASE_URL).buildUpon();
 
         switch (function) {
         case 'w':
-            builtUri.buildUpon().appendPath(WELCOME_PATH);
+            uriBuilder.appendPath(WELCOME_PATH);
             break;
         case 'c':
-            builtUri.buildUpon().appendPath(CHAT_PATH);
+            uriBuilder.appendPath(CHAT_PATH);
             break;
         case 'd':
-            builtUri.buildUpon().appendPath(DETAILS_PATH).appendPath(placeID);
+            uriBuilder.appendPath(DETAILS_PATH).appendPath(placeID);
             break;
         default:
             return null;
         }
 
-        builtUri.buildUpon().build();
-
+        Uri builtUri = uriBuilder.build();
         URL url = null;
         try {
             url = new URL(builtUri.toString());
