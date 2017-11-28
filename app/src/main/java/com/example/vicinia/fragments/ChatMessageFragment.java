@@ -42,6 +42,9 @@ public class ChatMessageFragment extends Fragment {
      */
     public void onChatButton(View v){
         String message = mChatMessage.getText().toString();
+        if(message.length() < 2)
+            return;
+        
         mChatMessage.setText("");
 
         parent.onSendMessage(message);
