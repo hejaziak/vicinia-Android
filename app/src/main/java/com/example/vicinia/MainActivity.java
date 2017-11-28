@@ -3,10 +3,7 @@ package com.example.vicinia;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -14,21 +11,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.vicinia.messages.ChatMessage;
-import com.example.vicinia.messages.MessageAdapter;
-import com.example.vicinia.services.LocationService;
+import com.example.vicinia.pojos.ChatMessage;
+import com.example.vicinia.adapters.MessageAdapter;
+import com.example.vicinia.services.GPSTracker;
 import com.example.vicinia.utilities.ChatUtils;
 
 import java.io.IOException;
 import java.net.URL;
 
-import static com.example.vicinia.utilities.ChatUtils.buildChatUrl;
-import static com.example.vicinia.utilities.ChatUtils.buildDetailsUrl;
-import static com.example.vicinia.utilities.ChatUtils.buildWelcomeUrl;
 import static com.example.vicinia.utilities.ChatUtils.getResponseFromHttpUrl;
 
 public class MainActivity extends AppCompatActivity {
-    LocationService gps;
+    GPSTracker gps;
 
     ListView mChatHistory;
     private static MessageAdapter adapter;
@@ -55,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
-        gps = new LocationService(this);
+        gps = new GPSTracker(this);
     }
 
     /**

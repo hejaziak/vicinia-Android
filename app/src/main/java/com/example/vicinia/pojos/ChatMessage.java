@@ -1,4 +1,4 @@
-package com.example.vicinia.messages;
+package com.example.vicinia.pojos;
 
 public class ChatMessage {
     private String content;

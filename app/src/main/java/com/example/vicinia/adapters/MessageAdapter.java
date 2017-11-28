@@ -1,4 +1,4 @@
-package com.example.vicinia.messages;
+package com.example.vicinia.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.vicinia.R;
+import com.example.vicinia.pojos.ChatMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class MessageAdapter extends ArrayAdapter<ChatMessage> {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         
-        if(!message.isLeftAligned())
+        if(message.isLeftAligned())
             convertView = inflater.inflate(R.layout.left_meesage, parent, false);
         else
             convertView = inflater.inflate(R.layout.right_message, parent, false);
