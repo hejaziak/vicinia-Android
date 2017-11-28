@@ -12,7 +12,7 @@ import java.util.Scanner;
 /**
  * These utilities will be used to communicate with the Chatbot.
  */
-public class ChatUtils {
+public class UrlUtilities {
 
     final static String CHATBOT_BASE_URL = "https://vicinia.herokuapp.com";
 
