@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.vicinia.services.GPSTracker;
 
 import static com.example.vicinia.services.ChatMessageServices.getWelcome;
 
 public class MainActivity extends AppCompatActivity {
+    static MainActivity instance;
     FragmentManager fragmentManager;
 
     public String uuid;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        instance = this;
 
         fragmentManager = getFragmentManager();
 
@@ -69,5 +72,9 @@ public class MainActivity extends AppCompatActivity {
     private void showErrorMessage() {
 //        mTextView.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    }
+
+    public static MainActivity getInstance() {
+        return instance;
     }
 }
