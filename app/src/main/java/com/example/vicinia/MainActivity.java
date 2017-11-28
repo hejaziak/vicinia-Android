@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.fragments.ChatMessageFragment;
@@ -21,9 +19,6 @@ public class MainActivity extends AppCompatActivity {
 
     public GPSTracker gps;
 
-    private ProgressBar mLoadingIndicator;
-    private TextView mErrorMessageDisplay;
-
     private ChatMessageFragment fChatMessage;
     private ChatHistoryFragment fChatHistory;
 
@@ -31,51 +26,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         instance = this;
-
         fragmentManager = getSupportFragmentManager();
-
-        mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
-        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        gps = new GPSTracker(this);
 
         fChatMessage = (ChatMessageFragment) fragmentManager.findFragmentById(R.id.chat_message_fragment);
         fChatHistory = (ChatHistoryFragment) fragmentManager.findFragmentById(R.id.chat_history_fragment);
 
-        gps = new GPSTracker(this);
-
         getWelcome();
-    }
-
-
-    /**
-     * This method will make the error message visible and hide all other
-     * View components
-     */
-    private void showJsonDataView() {
-        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-//        mTextView.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * This method will make the error message visible and hide all other
-     * View components
-     */
-    private void showLoadingIndicator() {
-        mLoadingIndicator.setVisibility(View.VISIBLE);
-
-    }
-
-    /**
-     * This method will make the error message visible and hide all other
-     * View components
-     */
-    private void showErrorMessage() {
-//        mTextView.setVisibility(View.INVISIBLE);
-        mErrorMessageDisplay.setVisibility(View.VISIBLE);
-    }
-
-    public static MainActivity getInstance() {
-        return instance;
     }
 
     public void onSendMessage(String message) {
@@ -89,5 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onChatButton(View v) {
         fChatMessage.onChatButton(v);
+    }
+
+    public static MainActivity getInstance() {
+        return instance;
     }
 }
