@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void showJsonDataView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-        mTextView.setVisibility(View.VISIBLE);
+//        mTextView.setVisibility(View.VISIBLE);
     }
 
     /**
