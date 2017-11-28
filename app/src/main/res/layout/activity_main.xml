@@ -25,40 +25,18 @@
             android:visibility="invisible" />
 
         <!-- Previous Messages -->
-        <ListView
-            android:id="@+id/chat_history"
+        <fragment
+            android:name="com.example.vicinia.fragments.ChatHistoryFragment"
+            android:id="@+id/chat_history_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/send_message_layout"
-            android:divider="@null" />
+            android:layout_above="@+id/chat_message_fragment"/>
 
         <!-- Type Message -->
-        <LinearLayout
-            android:id="@+id/send_message_layout"
+        <fragment
+            android:name="com.example.vicinia.fragments.ChatMessageFragment"
+            android:id="@+id/chat_message_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="#ffdddddd"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/et_message"
-                    android:layout_width="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="@android:color/holo_blue_dark"/>
-
-                <ImageButton
-                    android:id="@+id/btn_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onChatButton"
-                    android:src="@drawable/ic_send_black_24dp"
-                    android:text="Send"
-                    android:tint="@android:color/holo_blue_dark" />
-        </LinearLayout>
-
+            android:layout_alignParentBottom="true"/>
 </RelativeLayout>
