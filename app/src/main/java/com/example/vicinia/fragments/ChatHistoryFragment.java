@@ -13,6 +13,7 @@ import com.example.vicinia.adapters.MessageAdapter;
 import com.example.vicinia.pojos.ChatMessage;
 
 public class ChatHistoryFragment extends Fragment {
+    ChatMessage lastMessage = null;
 
     ListView mChatHistory;
     private static MessageAdapter adapter;
@@ -34,13 +35,21 @@ public class ChatHistoryFragment extends Fragment {
         ChatMessage newMessage = new ChatMessage(message, false);
         adapter.add(newMessage);
 
+        lastMessage = new ChatMessage("typing...", true);
+        adapter.add(lastMessage);
+
         scrollDown();
     }
 
     public void onReceiveMessage(String message){
-        ChatMessage newMessage = new ChatMessage(message, true);
-        adapter.add(newMessage);
-
+        if(lastMessage != null){
+            lastMessage.setContent(message);
+            adapter.notifyDataSetChanged();
+        }
+        else{
+            ChatMessage newMessage = new ChatMessage(message, true);
+            adapter.add(newMessage);
+        }
         scrollDown();
     }
 
