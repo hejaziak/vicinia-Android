@@ -33,10 +33,19 @@ public class ChatHistoryFragment extends Fragment {
     public void onSendMessage(String message){
         ChatMessage newMessage = new ChatMessage(message, false);
         adapter.add(newMessage);
+
+        scrollDown();
     }
 
     public void onReceiveMessage(String message){
         ChatMessage newMessage = new ChatMessage(message, true);
         adapter.add(newMessage);
+
+        scrollDown();
+    }
+
+
+    private void scrollDown() {
+        mChatHistory.setSelection(adapter.getCount() - 1);
     }
 }
