@@ -1,9 +1,6 @@
 package com.example.vicinia.client;
 
 import android.os.AsyncTask;
-
-import com.example.vicinia.MainActivity;
-
 import org.json.*;
 
 import java.net.*;
@@ -56,8 +53,8 @@ public class ChatMessageClient {
         protected String doInBackground(Object[]... params) {
             Object[] objs = params[0];
 
-            URL requestURL = (objs[1] instanceof URL ? (URL) objs[0] : null);
-            JSONObject requestBody = (objs[1] instanceof JSONObject ? (JSONObject) objs[1] : null);
+            URL requestURL = (objs[0] instanceof URL)? (URL) objs[0] : null;
+            JSONObject requestBody = (objs[1] instanceof JSONObject)? (JSONObject) objs[1] : null;
 
             if (requestURL != null && requestBody != null)
                 return httpPOST(requestURL, requestBody);
@@ -77,5 +74,6 @@ public class ChatMessageClient {
         }
         catch (JSONException e){
             e.printStackTrace();
-        }    }
+        }
+    }
 }

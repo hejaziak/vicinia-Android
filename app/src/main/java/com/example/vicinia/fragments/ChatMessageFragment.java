@@ -1,18 +1,15 @@
 package com.example.vicinia.fragments;
 
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
-import com.example.vicinia.pojos.ChatMessage;
 import com.example.vicinia.services.GPSTracker;
 import com.example.vicinia.utilities.UrlUtilities;
 
@@ -46,9 +43,8 @@ public class ChatMessageFragment extends Fragment {
     public void onChatButton(View v){
         String message = mChatMessage.getText().toString();
         mChatMessage.setText("");
-    
-        ChatMessage candidateMessage = new ChatMessage(message, false);
-//        adapter.add(candidateMessage);
+
+        parent.onSendMessage(message);
 
         double lat = 0;
         double lng = 0;

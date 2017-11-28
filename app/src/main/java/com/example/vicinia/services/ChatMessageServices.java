@@ -25,6 +25,7 @@ public class ChatMessageServices {
             MainActivity mainActivity = MainActivity.getInstance();
             mainActivity.uuid = response.getString("uuid");
 
+            mainActivity.onReceiveMessage(response.getString("message"));
             Log.v(TAG, "UUID: "+mainActivity.uuid);
         }
         catch (JSONException e){
@@ -50,7 +51,16 @@ public class ChatMessageServices {
     }
 
     public static void onChatResponse(JSONObject response){
+        try{
+            MainActivity mainActivity = MainActivity.getInstance();
+            String message = response.getString("message");
+            mainActivity.onReceiveMessage(message);
 
+            Log.v(TAG, "Message: "+message);
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
     public static void getDetails(String placeID){
@@ -59,7 +69,16 @@ public class ChatMessageServices {
     }
 
     public static void onDetailsResponse(JSONObject response){
+        try{
+            MainActivity mainActivity = MainActivity.getInstance();
+            String message = response.getString("message");
+            mainActivity.onReceiveMessage(message);
 
+            Log.v(TAG, "Message: "+message);
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
     }
 
 }

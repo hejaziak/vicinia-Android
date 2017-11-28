@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import com.example.vicinia.R;
 import com.example.vicinia.adapters.MessageAdapter;
+import com.example.vicinia.pojos.ChatMessage;
 
 public class ChatHistoryFragment extends Fragment {
 
@@ -27,5 +28,15 @@ public class ChatHistoryFragment extends Fragment {
 
         adapter = new MessageAdapter(getActivity());
         mChatHistory.setAdapter(adapter);
+    }
+
+    public void onSendMessage(String message){
+        ChatMessage newMessage = new ChatMessage(message, false);
+        adapter.add(newMessage);
+    }
+
+    public void onReceiveMessage(String message){
+        ChatMessage newMessage = new ChatMessage(message, true);
+        adapter.add(newMessage);
     }
 }

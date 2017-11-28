@@ -2,6 +2,8 @@ package com.example.vicinia.utilities;
 
 import android.util.Log;
 
+import com.example.vicinia.MainActivity;
+
 import org.json.JSONObject;
 
 import java.io.*;
@@ -16,6 +18,11 @@ public class HttpUtilities {
 
         try {
             urlConnection = (HttpURLConnection) requestURL.openConnection();
+
+            MainActivity mainActivity = MainActivity.getInstance();
+            String uuid = mainActivity.uuid;
+            if(uuid != null)
+                urlConnection.setRequestProperty("Authorization",uuid);
 
             urlConnection.setRequestMethod("GET");
 
@@ -38,6 +45,11 @@ public class HttpUtilities {
 
         try {
             urlConnection = (HttpURLConnection) requestURL.openConnection();
+
+            MainActivity mainActivity = MainActivity.getInstance();
+            String uuid = mainActivity.uuid;
+            if(uuid != null)
+                urlConnection.setRequestProperty("Authorization",uuid);
 
             urlConnection.setRequestMethod("POST");
             urlConnection.setChunkedStreamingMode(0);
