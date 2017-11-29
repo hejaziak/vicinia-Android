@@ -3,6 +3,7 @@ package com.example.vicinia.services;
 import android.util.Log;
 
 import com.example.vicinia.MainActivity;
+import com.example.vicinia.activities.SplashActivity;
 import com.example.vicinia.client.ChatMessageClient;
 import com.example.vicinia.pojos.HttpRequest;
 import com.example.vicinia.utilities.UrlUtilities;
@@ -28,11 +29,13 @@ public class ChatMessageServices {
 
     public static void onWelcomeResponse(JSONObject response){
         try{
-            MainActivity mainActivity = MainActivity.getInstance();
-            mainActivity.uuid = response.getString("uuid");
+            String uuid = response.getString("uuid");
+            String message = response.getString("message");
 
-            mainActivity.onReceiveMessage(response.getString("message"));
-            Log.v(TAG, "UUID: "+mainActivity.uuid);
+            Log.v(TAG, "UUID: "+uuid);
+
+            SplashActivity splashActivity = SplashActivity.getInstance();
+            splashActivity.onLoadingFinish(uuid, message);
         }
         catch (JSONException e){
             e.printStackTrace();

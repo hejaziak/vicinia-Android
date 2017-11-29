@@ -26,9 +26,12 @@ public class HttpUtilities {
             urlConnection = (HttpURLConnection) requestURL.openConnection();
 
             MainActivity mainActivity = MainActivity.getInstance();
-            String uuid = mainActivity.uuid;
-            if(uuid != null)
-                urlConnection.setRequestProperty("Authorization",uuid);
+
+            if(requestMethod != UrlUtilities.API_METHODS.GET_WELCOME){
+                String uuid = mainActivity.uuid;
+                if(uuid != null)
+                    urlConnection.setRequestProperty("Authorization",uuid);
+            }
 
             urlConnection.setRequestMethod("GET");
 

@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         fChatMessage = (ChatMessageFragment) fragmentManager.findFragmentById(R.id.chat_message_fragment);
         fChatHistory = (ChatHistoryFragment) fragmentManager.findFragmentById(R.id.chat_history_fragment);
-
-        getWelcome();
     }
 
     public void onSendMessage(String message) {
