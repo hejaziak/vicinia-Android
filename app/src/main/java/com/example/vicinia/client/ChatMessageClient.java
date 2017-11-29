@@ -1,6 +1,11 @@
 package com.example.vicinia.client;
 
 import android.os.AsyncTask;
+
+import com.example.vicinia.pojos.HttpRequest;
+import com.example.vicinia.pojos.HttpResponse;
+import com.example.vicinia.utilities.UrlUtilities;
+
 import org.json.*;
 
 import java.net.*;
@@ -12,68 +17,72 @@ import static com.example.vicinia.utilities.HttpUtilities.httpGET;
 import static com.example.vicinia.utilities.HttpUtilities.httpPOST;
 
 public class ChatMessageClient {
-    public static class ApiGetTask extends AsyncTask<URL, Void, String> {
+    public static class ApiGetTask extends AsyncTask<HttpRequest, Void, HttpResponse> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
         @Override
-        protected String doInBackground(URL... params) {
-            URL requestURL = params[0];
-            return httpGET(requestURL);
+        protected HttpResponse doInBackground(HttpRequest... params) {
+            HttpRequest httpRequest = params[0];
+            return httpGET(httpRequest);
         }
 
         @Override
-        protected void onPostExecute(String response) {
+        protected void onPostExecute(HttpResponse response) {
             onGetResponse(response);
         }
     }
 
-    private static void onGetResponse(String response){
-        try{
-            JSONObject jsonResponse = new JSONObject(response);
-            if(jsonResponse.length() < 3)   //WELCOME RESPONSE
-                onWelcomeResponse(jsonResponse);
-            else                            //DETAILS RESPONSE
-                onDetailsResponse(jsonResponse);
-        }
-        catch (JSONException e){
-            e.printStackTrace();
+    private static void onGetResponse(HttpResponse response){
+        UrlUtilities.API_METHODS responseMethod = response.getMethod();
+        JSONObject responseBody = response.getJsonObject();
+        int responseStatus = response.getStatusCode();
+
+        if(responseStatus == 200){
+            switch (responseMethod){
+                case GET_WELCOME:
+                    onWelcomeResponse(responseBody);
+                    break;
+                case GET_DETAILS:
+                    onDetailsResponse(responseBody);
+                    break;
+                default:
+            }
         }
     }
 
-    public static class ApiPostTask extends AsyncTask<Object[], Void, String> {
+    public static class ApiPostTask extends AsyncTask<HttpRequest, Void, HttpResponse> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
         @Override
-        protected String doInBackground(Object[]... params) {
-            Object[] objs = params[0];
-
-            URL requestURL = (objs[0] instanceof URL)? (URL) objs[0] : null;
-            JSONObject requestBody = (objs[1] instanceof JSONObject)? (JSONObject) objs[1] : null;
-
-            if (requestURL != null && requestBody != null)
-                return httpPOST(requestURL, requestBody);
-            return null;
+        protected HttpResponse doInBackground(HttpRequest... params) {
+            HttpRequest httpRequest = params[0];
+            return httpPOST(httpRequest);
         }
 
         @Override
-        protected void onPostExecute(String response) {
+        protected void onPostExecute(HttpResponse response) {
             onPostResponse(response);
         }
     }
 
-    private static void onPostResponse(String response) {
-        try{
-            JSONObject jsonResponse = new JSONObject(response);
-            onChatResponse(jsonResponse);
-        }
-        catch (JSONException e){
-            e.printStackTrace();
+    private static void onPostResponse(HttpResponse response) {
+        UrlUtilities.API_METHODS responseMethod = response.getMethod();
+        JSONObject responseBody = response.getJsonObject();
+        int responseStatus = response.getStatusCode();
+
+        if(responseStatus == 200){
+            switch (responseMethod){
+                case POST_CHAT:
+                    onChatResponse(responseBody);
+                    break;
+                default:
+            }
         }
     }
 }

@@ -3,7 +3,10 @@ package com.example.vicinia.utilities;
 import android.util.Log;
 
 import com.example.vicinia.MainActivity;
+import com.example.vicinia.pojos.HttpRequest;
+import com.example.vicinia.pojos.HttpResponse;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -13,7 +16,10 @@ import java.util.Scanner;
 public class HttpUtilities {
     private static final String TAG = "VICINITA/HttpUtilities";
 
-    public static String httpGET(URL requestURL){
+    public static HttpResponse httpGET(HttpRequest request){
+        URL requestURL = request.getUrl();
+        UrlUtilities.API_METHODS requestMethod = request.getMethod();
+
         HttpURLConnection urlConnection = null;
 
         try {
@@ -29,18 +35,30 @@ public class HttpUtilities {
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             String response = readStream(in);
 
-            return response;
+            JSONObject responseJSON = new JSONObject(response);
+            HttpResponse httpResponse = new HttpResponse(requestURL, requestMethod, responseJSON, urlConnection.getResponseCode());
+
+            return httpResponse;
         } catch (IOException e){
             Log.e(TAG, "IOException", e);
             e.printStackTrace();
             return null;
+        } catch (JSONException e){
+            Log.e(TAG, "JSONException", e);
+            e.printStackTrace();
+            return null;
         }
+
         finally {
             urlConnection.disconnect();
         }
     }
 
-    public static String httpPOST(URL requestURL, JSONObject requestBody){
+    public static HttpResponse httpPOST(HttpRequest request){
+        URL requestURL = request.getUrl();
+        UrlUtilities.API_METHODS requestMethod = request.getMethod();
+        JSONObject requestBody = request.getJsonObject();
+
         HttpURLConnection urlConnection = null;
 
         try {
@@ -52,7 +70,7 @@ public class HttpUtilities {
                 urlConnection.setRequestProperty("Authorization",uuid);
 
             urlConnection.setRequestMethod("POST");
-            urlConnection.setChunkedStreamingMode(0);
+            urlConnection.setChunkedStreamingMode(0); //because you don't know the response size
 
             OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
             writeStream(out, requestBody.toString());
@@ -60,16 +78,25 @@ public class HttpUtilities {
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             String response = readStream(in);
 
-            return response;
+            JSONObject responseJSON = new JSONObject(response);
+            HttpResponse httpResponse = new HttpResponse(requestURL, requestMethod, responseJSON, urlConnection.getResponseCode());
+
+            return httpResponse;
         } catch (IOException e){
             Log.e(TAG, "IOException", e);
             e.printStackTrace();
             return null;
+        } catch (JSONException e){
+            Log.e(TAG, "JSONException", e);
+            e.printStackTrace();
+            return null;
         }
+
         finally {
             urlConnection.disconnect();
         }
     }
+
 
     // https://stackoverflow.com/questions/8376072/whats-the-readstream-method-i-just-can-not-find-it-anywhere
     private static String readStream(InputStream in) {

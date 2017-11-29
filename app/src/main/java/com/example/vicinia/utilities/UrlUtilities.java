@@ -13,6 +13,7 @@ import java.util.Scanner;
  * These utilities will be used to communicate with the Chatbot.
  */
 public class UrlUtilities {
+    public static enum API_METHODS {GET_WELCOME, GET_DETAILS, POST_CHAT}
 
     final static String CHATBOT_BASE_URL = "https://vicinia.herokuapp.com";
 
@@ -20,13 +21,17 @@ public class UrlUtilities {
     final static String CHAT_PATH = "chat";
     final static String DETAILS_PATH = "details";
 
+    final static String ID_PARAM = "id";
+    final static String LAT_PARAM = "lat";
+    final static String LNG_PARAM = "lng";
+
     /**
      * Builds the URL used to communicate with API @ /welcome
      *
      * @return The URL to use.
      */
     public static URL buildWelcomeUrl() {
-        return buildUrl('w', null);
+        return buildUrl(API_METHODS.GET_WELCOME, null);
     }
 
     /**
@@ -35,7 +40,7 @@ public class UrlUtilities {
      * @return The URL to use.
      */
     public static URL buildChatUrl() {
-        return buildUrl('c', null);
+        return buildUrl(API_METHODS.POST_CHAT, null);
     }
 
     /**
@@ -44,29 +49,37 @@ public class UrlUtilities {
      * @param placeID contains placeID if function is details.
      * @return The URL to use.
      */
-    public static URL buildDetailsUrl(String placeID) {
-        return buildUrl('d', placeID);
+    public static URL buildDetailsUrl(String placeID, double lat, double lng) {
+        String[] queryParams = {placeID, Double.toString(lat), Double.toString(lng)};
+        return buildUrl(API_METHODS.GET_DETAILS, queryParams);
     }
 
     /**
      * Builds the URL used to communicate with API
      *
      * @param function char denoting function.
-     * @param placeID contains placeID if function is details.
+     * @param queryParams contains a list of query parameters
      * @return The URL to use.
      */
-    public static URL buildUrl(char function, String placeID) {
+    public static URL buildUrl(API_METHODS function, String[] queryParams) {
         Uri.Builder uriBuilder = Uri.parse(CHATBOT_BASE_URL).buildUpon();
 
         switch (function) {
-        case 'w':
+            case GET_WELCOME:
             uriBuilder.appendPath(WELCOME_PATH);
             break;
-        case 'c':
+            case POST_CHAT:
             uriBuilder.appendPath(CHAT_PATH);
             break;
-        case 'd':
-            uriBuilder.appendPath(DETAILS_PATH).appendPath(placeID);
+            case GET_DETAILS:
+                String placeID = queryParams[0];
+                String lat = queryParams[1];
+                String lng = queryParams[2];
+
+                uriBuilder.appendPath(DETAILS_PATH)
+                        .appendQueryParameter(ID_PARAM, placeID)
+                        .appendQueryParameter(LAT_PARAM, lat)
+                        .appendQueryParameter(LNG_PARAM, lng);
             break;
         default:
             return null;

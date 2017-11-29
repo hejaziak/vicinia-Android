@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.client.ChatMessageClient;
+import com.example.vicinia.pojos.HttpRequest;
+import com.example.vicinia.utilities.UrlUtilities;
 
 import org.json.*;
 import java.net.*;
@@ -16,8 +18,12 @@ public class ChatMessageServices {
     private static final String TAG = "VICINITA/ChatServices";
 
     public static void getWelcome(){
-        URL url = buildWelcomeUrl();
-        new ChatMessageClient.ApiGetTask().execute(url);
+        URL requestURL = buildWelcomeUrl();
+        UrlUtilities.API_METHODS requestMethod = UrlUtilities.API_METHODS.GET_WELCOME;
+
+        HttpRequest httpRequest = new HttpRequest(requestURL, requestMethod);
+
+        new ChatMessageClient.ApiGetTask().execute(httpRequest);
     }
 
     public static void onWelcomeResponse(JSONObject response){
@@ -34,7 +40,8 @@ public class ChatMessageServices {
     }
 
     public static void sendChatMessage(String message, double lattitude, double longitude){
-        URL url = buildChatUrl();
+        URL requestURL = buildChatUrl();
+        UrlUtilities.API_METHODS requestMethod = UrlUtilities.API_METHODS.POST_CHAT;
         JSONObject requestBody = new JSONObject();
 
         try {
@@ -46,8 +53,9 @@ public class ChatMessageServices {
             e.printStackTrace();
         }
 
-        Object[] postParams = {url, requestBody};
-        new ChatMessageClient.ApiPostTask().execute(postParams);
+        HttpRequest httpRequest = new HttpRequest(requestURL, requestMethod, requestBody);
+
+        new ChatMessageClient.ApiPostTask().execute(httpRequest);
     }
 
     public static void onChatResponse(JSONObject response){
@@ -63,9 +71,13 @@ public class ChatMessageServices {
         }
     }
 
-    public static void getDetails(String placeID){
-        URL url = buildDetailsUrl(placeID);
-        new ChatMessageClient.ApiGetTask().execute(url);
+    public static void getDetails(String placeID, double lat, double lang){
+        URL requestURL = buildDetailsUrl(placeID, lat, lang);
+        UrlUtilities.API_METHODS requestMethod = UrlUtilities.API_METHODS.GET_DETAILS;
+
+        HttpRequest httpRequest = new HttpRequest(requestURL, requestMethod);
+
+        new ChatMessageClient.ApiGetTask().execute(httpRequest);
     }
 
     public static void onDetailsResponse(JSONObject response){
