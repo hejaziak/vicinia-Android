@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.fragments.ChatMessageFragment;
+import com.example.vicinia.fragments.QuickActionFragment;
 import com.example.vicinia.services.GPSTracker;
-
-import static com.example.vicinia.services.ChatMessageServices.getWelcome;
 
 public class MainActivity extends AppCompatActivity {
     static MainActivity instance;
@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ChatMessageFragment fChatMessage;
     private ChatHistoryFragment fChatHistory;
+    private QuickActionFragment fQuickAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,22 +34,27 @@ public class MainActivity extends AppCompatActivity {
 
         fChatMessage = (ChatMessageFragment) fragmentManager.findFragmentById(R.id.chat_message_fragment);
         fChatHistory = (ChatHistoryFragment) fragmentManager.findFragmentById(R.id.chat_history_fragment);
+        fQuickAction = (QuickActionFragment) fragmentManager.findFragmentById(R.id.quick_actions_fragment);
+
+        //hide keyboard at startup
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     public void onSendMessage(String message) {
         fChatHistory.onSendMessage(message);
     }
 
-    public void onReceiveMessage(String message) {
-        fChatHistory.onReceiveMessage(message);
+    public void onReceiveMessage(String message) { fChatHistory.onReceiveMessage(message); }
 
-    }
+    public void onChatButton(View v) { fChatMessage.onChatButton(v);  }
 
-    public void onChatButton(View v) {
-        fChatMessage.onChatButton(v);
-    }
+    public void onCinemaButton(View v) { fQuickAction.onCinemaButton(); }
 
-    public static MainActivity getInstance() {
-        return instance;
-    }
+    public void onGasStationButton(View v) { fQuickAction.onGasStationButton(); }
+
+    public void onHospitalButton(View v) { fQuickAction.onHospitalButton(); }
+
+    public void onRestaurantButton(View v) { fQuickAction.onRestaurantButton(); }
+
+    public static MainActivity getInstance() { return instance; }
 }

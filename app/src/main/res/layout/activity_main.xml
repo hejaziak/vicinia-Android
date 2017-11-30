@@ -8,23 +8,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-        <TextView
-            android:id="@+id/tv_error_message_display"
-            android:textSize="22sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Oops"
-            app:layout_constraintBottom_toTopOf="@+id/chat_message_fragment"
-            android:visibility="invisible"/>
-
-        <ProgressBar
-            android:id="@+id/pb_loading_indicator"
-            android:layout_height="42dp"
-            android:layout_width="42dp"
-            android:layout_gravity="center"
-            android:visibility="invisible" />
-
         <!-- Chat History -->
         <fragment
             android:name="com.example.vicinia.fragments.ChatHistoryFragment"
@@ -33,7 +16,7 @@
             android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/chat_message_fragment"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="18dp"/>
 
         <!-- Chat Message -->
@@ -43,7 +26,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/chat_history_fragment"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="18dp"/>
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/quick_actions_fragment" />
 
+        <!-- Quick Actions -->
+        <fragment
+            android:id="@+id/quick_actions_fragment"
+            android:name="com.example.vicinia.fragments.QuickActionFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chat_message_fragment" />
 </android.support.constraint.ConstraintLayout>
