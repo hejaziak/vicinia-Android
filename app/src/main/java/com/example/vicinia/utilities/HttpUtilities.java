@@ -117,8 +117,8 @@ public class HttpUtilities {
     // https://stackoverflow.com/questions/31611480/how-do-i-post-in-java-to-a-server
     private static void writeStream(OutputStream out, String data){
         try{
-            OutputStreamWriter outWriter = new OutputStreamWriter(out);
-            outWriter.write(data);
+            DataOutputStream wr = new DataOutputStream(out);
+            wr.writeBytes(data);
             out.flush();
         }
         catch (IOException e){

@@ -17,6 +17,10 @@ public class UrlUtilities {
 
     final static String CHATBOT_BASE_URL = "https://vicinia.herokuapp.com";
 
+    final static String DEBUG_URL = "192.168.1.2";
+    final static String DEBUG_PORT = "8080";
+    final static boolean DEBUG_MODE = true;
+
     final static String WELCOME_PATH = "welcome";
     final static String CHAT_PATH = "chat";
     final static String DETAILS_PATH = "details";
@@ -63,6 +67,11 @@ public class UrlUtilities {
      */
     public static URL buildUrl(API_METHODS function, String[] queryParams) {
         Uri.Builder uriBuilder = Uri.parse(CHATBOT_BASE_URL).buildUpon();
+
+        if (DEBUG_MODE) {
+            uriBuilder.encodedAuthority(DEBUG_URL + ":" + DEBUG_PORT);
+            uriBuilder.scheme("http");
+        }
 
         switch (function) {
             case GET_WELCOME:
