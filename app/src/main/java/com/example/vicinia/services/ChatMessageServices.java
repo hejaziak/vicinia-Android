@@ -49,8 +49,8 @@ public class ChatMessageServices {
 
         try {
             requestBody.put("message", message);
-            requestBody.put("latitude", lattitude);
-            requestBody.put("longitude", longitude);
+            requestBody.put("latitude", Double.toString(lattitude));
+            requestBody.put("longitude", Double.toString(longitude));
         } catch (JSONException e) {
             Log.e(TAG, "JSONException", e);
             e.printStackTrace();
