@@ -44,6 +44,7 @@ public class ChatHistoryFragment extends Fragment {
     public void onReceiveMessage(String message){
         if(lastMessage != null){
             lastMessage.setContent(message);
+            lastMessage = null;
             adapter.notifyDataSetChanged();
         }
         else{

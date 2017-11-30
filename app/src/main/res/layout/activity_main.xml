@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/main_layout"
     tools:context=".MainActivity">
 
         <!-- Chat History -->
@@ -17,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/chat_message_fragment"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="18dp"/>
+            android:layout_marginBottom="40dp"/>
 
         <!-- Chat Message -->
         <fragment
