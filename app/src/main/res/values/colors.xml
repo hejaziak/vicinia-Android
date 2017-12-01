@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#165c97</color>
     <color name="colorAccent">#898989</color>
 
-    <color name="quickAction">#062c4d</color>
+    <color name="quickAction">#3b3b3b</color>
 
     <color name="sentMessage">#1C78C6</color>
     <color name="receivedMessage">#d4d4d4</color>
