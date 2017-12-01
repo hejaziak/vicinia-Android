@@ -1,17 +1,16 @@
 package com.example.vicinia.fragments;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
-import com.example.vicinia.services.GPSTracker;
-import com.example.vicinia.utilities.UrlUtilities;
+import com.example.vicinia.services.GpsServices;
 
 import static com.example.vicinia.services.ChatMessageServices.sendChatMessage;
 
@@ -19,7 +18,7 @@ public class QuickActionFragment extends Fragment{
     public enum QUICK_ACTIONS {CINEMA, RESTAURANT, GAS_STATION, HOSPITAL}
 
     MainActivity parent;
-    GPSTracker gps;
+    GpsServices gps;
 
     ImageButton mCinemaButton;
     ImageButton mGasStationButton;
@@ -28,8 +27,7 @@ public class QuickActionFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        this.parent =  (MainActivity) getActivity();
-        this.gps = this.parent.gps;
+        this.parent = (MainActivity) getActivity();
 
         return inflater.inflate(R.layout.fragment_quick_actions, parent, false);
     }
@@ -42,6 +40,12 @@ public class QuickActionFragment extends Fragment{
         mRestaurantButton = view.findViewById(R.id.btn_restaurant);
     }
 
+    @Override
+    public void onResume() {
+        this.gps = this.parent.gpsServices;
+        super.onResume();
+    }
+
     public void onCinemaButton(){ onQuickActionButton(QUICK_ACTIONS.CINEMA); }
     public void onGasStationButton(){ onQuickActionButton(QUICK_ACTIONS.GAS_STATION); }
     public void onHospitalButton(){ onQuickActionButton(QUICK_ACTIONS.HOSPITAL); }
@@ -49,9 +53,7 @@ public class QuickActionFragment extends Fragment{
 
     public void onQuickActionButton(QUICK_ACTIONS action){
         String message = "";
-        double lat = 0;
-        double lng = 0;
-
+        
         switch (action){
             case CINEMA:
                 message = "cinema";
@@ -67,10 +69,8 @@ public class QuickActionFragment extends Fragment{
                 break;
         }
 
-        if(gps != null && gps.canGetLocation()){
-            lat = gps.getLatitude();
-            lng = gps.getLongitude();
-        }
+        double lat = gps.getLatitude();
+        double lng = gps.getLongitude();
 
         sendChatMessage(message, lat, lng);
     }

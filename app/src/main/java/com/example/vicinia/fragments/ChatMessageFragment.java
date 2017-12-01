@@ -1,5 +1,6 @@
 package com.example.vicinia.fragments;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,14 +11,14 @@ import android.widget.ImageButton;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
-import com.example.vicinia.services.GPSTracker;
+import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.UrlUtilities;
 
 import static com.example.vicinia.services.ChatMessageServices.sendChatMessage;
 
 public class ChatMessageFragment extends Fragment {
     MainActivity parent;
-    GPSTracker gps;
+    GpsServices gps;
 
     EditText mChatMessage;
     ImageButton mChatButton;
@@ -25,7 +26,6 @@ public class ChatMessageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         this.parent =  (MainActivity) getActivity();
-        this.gps = this.parent.gps;
 
         return inflater.inflate(R.layout.fragment_chat_message, parent, false);
     }
@@ -36,6 +36,11 @@ public class ChatMessageFragment extends Fragment {
         mChatMessage = view.findViewById(R.id.et_message);
     }
 
+    @Override
+    public void onResume() {
+        this.gps = this.parent.gpsServices;
+        super.onResume();
+    }
     /**
      * This method constructs the URL (using {@link UrlUtilities}) for the chat url ,
      * and fires off an AsyncTask to perform the POST request using {@link com.example.vicinia.client.ChatMessageClient.ApiPostTask}
@@ -49,12 +54,13 @@ public class ChatMessageFragment extends Fragment {
 
         parent.onSendMessage(message);
 
-        double lat = 0;
-        double lng = 0;
+        double lat = gps.getLatitude();
+        double lng = gps.getLongitude();
 
-        if(gps != null && gps.canGetLocation()){
-            lat = gps.getLatitude();
-            lng = gps.getLongitude();
+        Location location = gps.getLastLocation();
+        if(location != null){
+            lat = location.getLatitude();
+            lng = location.getLongitude();
         }
 
         sendChatMessage(message, lat, lng);
