@@ -35,7 +35,15 @@ public class ChatHistoryFragment extends Fragment {
         ChatMessage newMessage = new ChatMessage(message, false);
         adapter.add(newMessage);
 
-        lastMessage = new ChatMessage("typing...", true);
+        scrollDown();
+    }
+
+    public void sendTypingMessage(){
+        sendTypingMessage("typing...");
+    }
+
+    public void sendTypingMessage(String initialMessage){
+        lastMessage = new ChatMessage(initialMessage, true);
         adapter.add(lastMessage);
 
         scrollDown();
@@ -45,12 +53,14 @@ public class ChatHistoryFragment extends Fragment {
         if(lastMessage != null){
             lastMessage.setContent(message);
             lastMessage = null;
+
             adapter.notifyDataSetChanged();
         }
         else{
             ChatMessage newMessage = new ChatMessage(message, true);
             adapter.add(newMessage);
         }
+
         scrollDown();
     }
 

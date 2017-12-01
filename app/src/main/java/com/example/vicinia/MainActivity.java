@@ -80,19 +80,32 @@ public class MainActivity extends AppCompatActivity {
 
     public void onSendMessage(String message) {
         fChatHistory.onSendMessage(message);
+        fChatHistory.sendTypingMessage();
     }
 
     public void onReceiveMessage(String message) { fChatHistory.onReceiveMessage(message); }
 
     public void onChatButton(View v) { fChatMessage.onChatButton(v);  }
 
-    public void onCinemaButton(View v) { fQuickAction.onCinemaButton(); }
+    public void onCinemaButton(View v) {
+        fQuickAction.onCinemaButton();
+        fChatHistory.sendTypingMessage("Getting nearby cinemas...");
+    }
 
-    public void onGasStationButton(View v) { fQuickAction.onGasStationButton(); }
+    public void onGasStationButton(View v) {
+        fQuickAction.onGasStationButton();
+        fChatHistory.sendTypingMessage("Getting nearby gas stations...");
+    }
 
-    public void onHospitalButton(View v) { fQuickAction.onHospitalButton(); }
+    public void onHospitalButton(View v) {
+        fQuickAction.onHospitalButton();
+        fChatHistory.sendTypingMessage("Getting nearby hospitals...");
+    }
 
-    public void onRestaurantButton(View v) { fQuickAction.onRestaurantButton(); }
+    public void onRestaurantButton(View v) {
+        fQuickAction.onRestaurantButton();
+        fChatHistory.sendTypingMessage("Getting nearby restaurants...");
+    }
 
     public static MainActivity getInstance() { return instance; }
 }
