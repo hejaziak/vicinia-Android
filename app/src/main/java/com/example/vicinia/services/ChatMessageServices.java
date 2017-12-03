@@ -96,13 +96,13 @@ public class ChatMessageServices {
             String link = response.getString("link");
 
             String message = "";
-            message += name + "<br>";
-            message += distance + "<br>";
-            message += rating + "<br>";
-            message += type + "<br>";
-            message += address + "<br>";
-            message += mobileNumber + "<br>";
-            message += link;
+            message += "<b>Name: </b>" + name + "<br>";
+            message += "<b>Distance: </b>" +distance + "<br>";
+            message += "<b>Rating: </b>" +rating + "<br>";
+            message += "<b>Type: </b>" +type + "<br>";
+            message += "<b>Address: </b>" +address + "<br>";
+            message += "<b>Mobile Number: </b>" +mobileNumber + "<br/><br/>";
+            message += "<h4><b><font color=\"#1C78C6\"><a href=\"" + link + "\">Open in Google Maps</a></font></b></h4>";
 
             mainActivity.onReceiveMessage(message);
             Log.v(TAG, "Message: "+message);

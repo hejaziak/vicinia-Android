@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             mCardRecyclerView.setHasFixedSize(true);
             mCardRecyclerView.setLayoutManager(layoutManager);
             mCardRecyclerView.setAdapter(adapter);
+
+            mMessageTextView = convertView.findViewById(R.id.text);
+            mMessageTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
             if (inMessage.charAt(0) == '[')
                 return handleCardList(convertView, mCardList, inMessage);

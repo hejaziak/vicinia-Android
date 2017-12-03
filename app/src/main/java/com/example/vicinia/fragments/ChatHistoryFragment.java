@@ -65,7 +65,6 @@ public class ChatHistoryFragment extends Fragment {
         scrollDown();
     }
 
-
     private void scrollDown() {
         mChatHistory.setSelection(adapter.getCount() - 1);
     }
