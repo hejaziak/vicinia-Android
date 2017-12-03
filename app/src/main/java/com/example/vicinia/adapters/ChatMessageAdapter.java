@@ -86,13 +86,21 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             convertView = inflater.inflate(R.layout.right_message, parent, false);
 
         mMessageTextView = convertView.findViewById(R.id.text);
-        mMessageTextView.setText(Html.fromHtml(inMessage));
+
+        // fromHtml from API >= N is deprecated. For this to work do this to allow compatibility mod
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            mMessageTextView.setText(Html.fromHtml(inMessage, Html.FROM_HTML_MODE_LEGACY));
+        }
+        else {
+            mMessageTextView.setText(Html.fromHtml(inMessage));
+        }
         return convertView;
     }
 
     private View handleCardList(View convertView, List<String[]> mCardList, String inMessage) {
         Log.v(TAG, "This is a JSON list");
 
+        mMessageTextView.setText(R.string.chat_response);
         RecyclerView.Adapter adapter = mCardRecyclerView.getAdapter();
 
         try {

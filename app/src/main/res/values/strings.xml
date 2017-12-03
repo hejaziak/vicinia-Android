@@ -8,4 +8,5 @@
     <string name="btn_cinema">get nearby cinemas</string>
     <string name="btn_gas_stations">get nearby gas stations</string>
     <string name="text_quick_action">Get Nearby :</string>
+    <string name="chat_response">I found these places for you</string>
 </resources>
