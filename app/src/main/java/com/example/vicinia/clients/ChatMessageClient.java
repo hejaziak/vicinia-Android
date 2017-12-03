@@ -1,14 +1,14 @@
-package com.example.vicinia.client;
+package com.example.vicinia.clients;
 
 import android.os.AsyncTask;
 
+import com.example.vicinia.MainActivity;
 import com.example.vicinia.pojos.HttpRequest;
 import com.example.vicinia.pojos.HttpResponse;
+import com.example.vicinia.utilities.DialogUtilities;
 import com.example.vicinia.utilities.UrlUtilities;
 
 import org.json.*;
-
-import java.net.*;
 
 import static com.example.vicinia.services.ChatMessageServices.onChatResponse;
 import static com.example.vicinia.services.ChatMessageServices.onDetailsResponse;
@@ -36,11 +36,12 @@ public class ChatMessageClient {
     }
 
     private static void onGetResponse(HttpResponse response){
-        UrlUtilities.API_METHODS responseMethod = response.getMethod();
-        JSONObject responseBody = response.getJsonObject();
         int responseStatus = response.getStatusCode();
 
         if(responseStatus == 200){
+            UrlUtilities.API_METHODS responseMethod = response.getMethod();
+            JSONObject responseBody = response.getJsonObject();
+
             switch (responseMethod){
                 case GET_WELCOME:
                     onWelcomeResponse(responseBody);
@@ -50,6 +51,8 @@ public class ChatMessageClient {
                     break;
                 default:
             }
+        }else{
+            DialogUtilities.internetErrorDialogBuider(MainActivity.getInstance());
         }
     }
 
@@ -72,17 +75,18 @@ public class ChatMessageClient {
     }
 
     private static void onPostResponse(HttpResponse response) {
-        UrlUtilities.API_METHODS responseMethod = response.getMethod();
-        JSONObject responseBody = response.getJsonObject();
         int responseStatus = response.getStatusCode();
-
         if(responseStatus == 200){
+            UrlUtilities.API_METHODS responseMethod = response.getMethod();
+            JSONObject responseBody = response.getJsonObject();
             switch (responseMethod){
                 case POST_CHAT:
                     onChatResponse(responseBody);
                     break;
                 default:
             }
+        }else{
+            DialogUtilities.internetErrorDialogBuider(MainActivity.getInstance());
         }
     }
 }

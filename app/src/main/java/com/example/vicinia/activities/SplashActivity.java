@@ -12,6 +12,8 @@ import android.widget.Toast;
 import com.example.vicinia.MainActivity;
 
 import static com.example.vicinia.services.ChatMessageServices.getWelcome;
+import static com.example.vicinia.utilities.ConnectivityUtitlities.isConnectedToInternet;
+import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogBuider;
 
 public class SplashActivity extends Activity {
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 33;
@@ -30,7 +32,10 @@ public class SplashActivity extends Activity {
                     PERMISSION_ACCESS_COARSE_LOCATION);
         }
 
-        getWelcome();
+        if(isConnectedToInternet(this))
+            getWelcome();
+        else
+            internetErrorDialogBuider(this);
     }
 
     public void onLoadingFinish(String uuid, String message){
@@ -44,10 +49,11 @@ public class SplashActivity extends Activity {
 
     @Override
     protected void onStop() {
-        MainActivity mainActivity = MainActivity.getInstance();
-        mainActivity.uuid = uuid;
-        mainActivity.onReceiveMessage(welcomeMessage);
-
+        if(isConnectedToInternet(this)){
+            MainActivity mainActivity = MainActivity.getInstance();
+            mainActivity.uuid = uuid;
+            mainActivity.onReceiveMessage(welcomeMessage);
+        }
         super.onStop();
     }
 

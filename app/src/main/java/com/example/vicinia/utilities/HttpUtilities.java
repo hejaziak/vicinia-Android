@@ -44,8 +44,7 @@ public class HttpUtilities {
             return httpResponse;
         } catch (IOException e){
             Log.e(TAG, "IOException", e);
-            e.printStackTrace();
-            return null;
+            return new HttpResponse(400);
         } catch (JSONException e){
             Log.e(TAG, "JSONException", e);
             e.printStackTrace();
@@ -87,8 +86,7 @@ public class HttpUtilities {
             return httpResponse;
         } catch (IOException e){
             Log.e(TAG, "IOException", e);
-            e.printStackTrace();
-            return null;
+            return new HttpResponse(400);
         } catch (JSONException e){
             Log.e(TAG, "JSONException", e);
             e.printStackTrace();

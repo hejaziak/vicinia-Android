@@ -14,6 +14,10 @@ public class HttpResponse extends  HttpRequest{
         this.statusCode = statusCode;
     }
 
+    public HttpResponse(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
     public int getStatusCode() {
         return statusCode;
     }

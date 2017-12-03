@@ -44,7 +44,7 @@ public class ChatMessageFragment extends Fragment {
 
     /**
      * This method constructs the URL (using {@link UrlUtilities}) for the chat url ,
-     * and fires off an AsyncTask to perform the POST request using {@link com.example.vicinia.client.ChatMessageClient.ApiPostTask}
+     * and fires off an AsyncTask to perform the POST request using {@link com.example.vicinia.clients.ChatMessageClient.ApiPostTask}
      */
     public void onChatButton(View v) {
         String message = mChatMessage.getText().toString();

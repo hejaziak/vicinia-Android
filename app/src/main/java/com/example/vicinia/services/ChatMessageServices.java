@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.activities.SplashActivity;
-import com.example.vicinia.client.ChatMessageClient;
+import com.example.vicinia.clients.ChatMessageClient;
 import com.example.vicinia.pojos.HttpRequest;
 import com.example.vicinia.utilities.UrlUtilities;
 

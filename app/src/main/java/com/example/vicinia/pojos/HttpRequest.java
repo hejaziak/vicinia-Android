@@ -11,6 +11,10 @@ public class HttpRequest {
     private UrlUtilities.API_METHODS method;
     private JSONObject jsonObject;
 
+    public HttpRequest() {
+
+    }
+
     public HttpRequest(URL url, UrlUtilities.API_METHODS method) {
         this.url = url;
         this.method = method;

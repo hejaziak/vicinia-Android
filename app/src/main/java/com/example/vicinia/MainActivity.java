@@ -1,7 +1,10 @@
 package com.example.vicinia;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +16,10 @@ import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.fragments.ChatMessageFragment;
 import com.example.vicinia.fragments.QuickActionFragment;
 import com.example.vicinia.services.GpsServices;
+import com.example.vicinia.utilities.DialogUtilities;
+
+import static com.example.vicinia.utilities.DialogUtilities.helpDialogBuilder;
+import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogBuider;
 
 public class MainActivity extends AppCompatActivity {
     static MainActivity instance;
@@ -70,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (itemThatWasClickedId){
             case R.id.btn_help:
+                helpDialogBuilder(this);
                 return true;
             default:
                 break;
@@ -108,4 +116,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static MainActivity getInstance() { return instance; }
+
+
+    public void onInternetError() {
+        DialogUtilities.internetErrorDialogBuider(this);
+    }
 }
