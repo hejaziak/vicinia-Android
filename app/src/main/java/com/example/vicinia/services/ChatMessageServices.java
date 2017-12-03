@@ -42,23 +42,34 @@ public class ChatMessageServices {
         }
     }
 
-    public static void sendChatMessage(String message, double lattitude, double longitude){
+    public static void sendChatMessage(String message, double latitude, double longitude){
         URL requestURL = buildChatUrl();
         UrlUtilities.API_METHODS requestMethod = UrlUtilities.API_METHODS.POST_CHAT;
         JSONObject requestBody = new JSONObject();
 
-        try {
-            requestBody.put("message", message);
-            requestBody.put("latitude", Double.toString(lattitude));
-            requestBody.put("longitude", Double.toString(longitude));
-        } catch (JSONException e) {
-            Log.e(TAG, "JSONException", e);
-            e.printStackTrace();
+        if(latitude == 0 && longitude == 0){
+            MainActivity.getInstance().onGpsError();
+            JSONObject jsonError = new JSONObject();
+            try {
+                jsonError.put("message","couldn't find your location");
+            } catch (JSONException e) {
+            }
+            onChatResponse(jsonError);
         }
+        else{
+            try {
+                requestBody.put("message", message);
+                requestBody.put("latitude", Double.toString(latitude));
+                requestBody.put("longitude", Double.toString(longitude));
+            } catch (JSONException e) {
+                Log.e(TAG, "JSONException", e);
+                e.printStackTrace();
+            }
 
-        HttpRequest httpRequest = new HttpRequest(requestURL, requestMethod, requestBody);
+            HttpRequest httpRequest = new HttpRequest(requestURL, requestMethod, requestBody);
 
-        new ChatMessageClient.ApiPostTask().execute(httpRequest);
+            new ChatMessageClient.ApiPostTask().execute(httpRequest);
+        }
     }
 
     public static void onChatResponse(JSONObject response){
@@ -74,13 +85,17 @@ public class ChatMessageServices {
         }
     }
 
-    public static void getDetails(String placeID, double lat, double lang){
-        URL requestURL = buildDetailsUrl(placeID, lat, lang);
-        UrlUtilities.API_METHODS requestMethod = UrlUtilities.API_METHODS.GET_DETAILS;
+    public static void getDetails(String placeID, double latitude, double longitude){
+        if(latitude == 0 && longitude == 0)
+            MainActivity.getInstance().onGpsError();
+        else{
+            URL requestURL = buildDetailsUrl(placeID, latitude, longitude);
+            UrlUtilities.API_METHODS requestMethod = UrlUtilities.API_METHODS.GET_DETAILS;
 
-        HttpRequest httpRequest = new HttpRequest(requestURL, requestMethod);
+            HttpRequest httpRequest = new HttpRequest(requestURL, requestMethod);
 
-        new ChatMessageClient.ApiGetTask().execute(httpRequest);
+            new ChatMessageClient.ApiGetTask().execute(httpRequest);
+        }
     }
 
     public static void onDetailsResponse(JSONObject response){

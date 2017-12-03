@@ -18,6 +18,7 @@ import com.example.vicinia.fragments.QuickActionFragment;
 import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.DialogUtilities;
 
+import static com.example.vicinia.utilities.DialogUtilities.gpsErrorBuilder;
 import static com.example.vicinia.utilities.DialogUtilities.helpDialogBuilder;
 import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogBuider;
 
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         gpsServices.onStop();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,8 +116,11 @@ public class MainActivity extends AppCompatActivity {
 
     public static MainActivity getInstance() { return instance; }
 
-
     public void onInternetError() {
-        DialogUtilities.internetErrorDialogBuider(this);
+        internetErrorDialogBuider(this);
+    }
+
+    public void onGpsError() {
+        DialogUtilities.gpsErrorBuilder(this);
     }
 }

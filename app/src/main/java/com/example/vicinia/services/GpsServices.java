@@ -105,4 +105,8 @@ public class GpsServices implements GoogleApiClient.ConnectionCallbacks, GoogleA
     public double getLatitude() {
         return latitude;
     }
+
+    public boolean isGpsConnected() {
+        return latitude == 0 && longitude == 0;
+    }
 }
