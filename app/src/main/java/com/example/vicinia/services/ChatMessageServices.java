@@ -47,15 +47,8 @@ public class ChatMessageServices {
         UrlUtilities.API_METHODS requestMethod = UrlUtilities.API_METHODS.POST_CHAT;
         JSONObject requestBody = new JSONObject();
 
-        if(latitude == 0 && longitude == 0){
+        if(latitude == 0 && longitude == 0)
             MainActivity.getInstance().onGpsError();
-            JSONObject jsonError = new JSONObject();
-            try {
-                jsonError.put("message","couldn't find your location");
-            } catch (JSONException e) {
-            }
-            onChatResponse(jsonError);
-        }
         else{
             try {
                 requestBody.put("message", message);

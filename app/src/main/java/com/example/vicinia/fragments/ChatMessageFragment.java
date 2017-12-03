@@ -48,15 +48,18 @@ public class ChatMessageFragment extends Fragment {
      */
     public void onChatButton(View v) {
         String message = mChatMessage.getText().toString();
-        if (message.length() < 2)
+        if (message.length() < 1)
             return;
 
         mChatMessage.setText("");
 
+        // for the UI
         parent.onSendMessage(message);
 
         double lat = gps.getLatitude();
         double lng = gps.getLongitude();
+
+        // For the api
 
         Location location = gps.getLastLocation();
         if (location != null) {
