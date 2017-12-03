@@ -1,6 +1,5 @@
 package com.example.vicinia.adapters;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.CardView;
@@ -16,12 +15,10 @@ import android.widget.TextView;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
-import com.example.vicinia.services.GpsServices;
 
 import java.util.List;
 
 import static android.graphics.Color.rgb;
-import static com.example.vicinia.services.ChatMessageServices.getDetails;
 
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardViewHolder> {
     static final String TAG = "VICINIA/CardListAdapter";
@@ -62,11 +59,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                 Button btn = (Button) v;
                 String placeID = (String) btn.getTag();
 
-                GpsServices gps = MainActivity.getInstance().gpsServices;
-                double lat = gps.getLatitude();
-                double lng = gps.getLongitude();
-
-                getDetails(placeID, lat, lng);
+                MainActivity.getInstance().onGetDetailsButton(placeID);
             }
         });
 

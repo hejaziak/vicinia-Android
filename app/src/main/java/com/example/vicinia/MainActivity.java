@@ -1,10 +1,7 @@
 package com.example.vicinia;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +15,7 @@ import com.example.vicinia.fragments.QuickActionFragment;
 import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.DialogUtilities;
 
-import static com.example.vicinia.utilities.DialogUtilities.gpsErrorBuilder;
+import static com.example.vicinia.services.ChatMessageServices.getDetails;
 import static com.example.vicinia.utilities.DialogUtilities.helpDialogBuilder;
 import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogBuider;
 
@@ -114,13 +111,22 @@ public class MainActivity extends AppCompatActivity {
         fChatHistory.sendTypingMessage("Getting nearby restaurants...");
     }
 
+    public void onGetDetailsButton(String placeID) {
+        double lat = gpsServices.getLatitude();
+        double lng = gpsServices.getLongitude();
+        getDetails(placeID, lat, lng);
+
+        fChatHistory.sendTypingMessage();
+    }
+
     public static MainActivity getInstance() { return instance; }
+
+    public ChatMessageFragment getfChatMessage() { return fChatMessage; }
 
     public void onInternetError() {
         internetErrorDialogBuider(this);
     }
 
-    public void onGpsError() {
-        DialogUtilities.gpsErrorBuilder(this);
-    }
+    public void onGpsError() { DialogUtilities.gpsErrorBuilder(this); }
+
 }
