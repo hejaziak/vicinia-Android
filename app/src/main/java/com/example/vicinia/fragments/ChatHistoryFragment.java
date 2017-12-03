@@ -1,13 +1,19 @@
 package com.example.vicinia.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 
+import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
 import com.example.vicinia.adapters.ChatMessageAdapter;
 import com.example.vicinia.pojos.ChatMessage;
@@ -29,6 +35,18 @@ public class ChatHistoryFragment extends Fragment {
 
         adapter = new ChatMessageAdapter(getActivity());
         mChatHistory.setAdapter(adapter);
+
+        // Hiding keyboard upon touching the screen
+        mChatHistory.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                InputMethodManager imm = (InputMethodManager) MainActivity.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(MainActivity.getInstance().getfChatMessage().mChatMessage.getWindowToken(), 0);
+
+                return false;
+            }
+        });
     }
 
     public void onSendMessage(String message){
