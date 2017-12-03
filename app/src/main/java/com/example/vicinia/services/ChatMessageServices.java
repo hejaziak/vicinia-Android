@@ -110,7 +110,7 @@ public class ChatMessageServices {
             message += "<b>Type: </b>" +type + "<br>";
             message += "<b>Address: </b>" +address + "<br>";
             message += "<b>Mobile Number: </b>" +mobileNumber + "<br/><br/>";
-            message += "<h4><b><font color=\"#1C78C6\"><a href=\"" + link + "\">Open in Google Maps</a></font></b></h4>";
+            message += "<b><font color=\"#1C78C6\"><a href=\"" + link + "\">Open in Google Maps</a></font></b>";
 
             mainActivity.onReceiveMessage(message);
             Log.v(TAG, "Message: "+message);
