@@ -19,15 +19,15 @@ public class UrlUtilities {
 
     final static String DEBUG_URL = "192.168.1.2";
     final static String DEBUG_PORT = "8080";
-    final static boolean DEBUG_MODE = true;
+    final static boolean DEBUG_MODE = false;
 
     final static String WELCOME_PATH = "welcome";
     final static String CHAT_PATH = "chat";
-    final static String DETAILS_PATH = "details";
+    final static String DETAILS_PATH = "placeDetails";
 
-    final static String ID_PARAM = "id";
-    final static String LAT_PARAM = "lat";
-    final static String LNG_PARAM = "lng";
+    final static String ID_PARAM = "place_id";
+    final static String LAT_PARAM = "latitude";
+    final static String LNG_PARAM = "longitude";
 
     /**
      * Builds the URL used to communicate with API @ /welcome

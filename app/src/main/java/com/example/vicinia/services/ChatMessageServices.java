@@ -86,9 +86,25 @@ public class ChatMessageServices {
     public static void onDetailsResponse(JSONObject response){
         try{
             MainActivity mainActivity = MainActivity.getInstance();
-            String message = response.getString("message");
-            mainActivity.onReceiveMessage(message);
 
+            String name = response.getString("name");
+            String distance = response.getString("distance");
+            String rating = response.getString("rating");
+            String type = response.getString("type");
+            String address = response.getString("address");
+            String mobileNumber = response.getString("mobile_number");
+            String link = response.getString("link");
+
+            String message = "";
+            message += name + "<br>";
+            message += distance + "<br>";
+            message += rating + "<br>";
+            message += type + "<br>";
+            message += address + "<br>";
+            message += mobileNumber + "<br>";
+            message += link;
+
+            mainActivity.onReceiveMessage(message);
             Log.v(TAG, "Message: "+message);
         }
         catch (JSONException e){

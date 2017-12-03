@@ -59,7 +59,7 @@ public class QuickActionFragment extends Fragment{
                 message = "cinema";
                 break;
             case GAS_STATION:
-                message = "gas station";
+                message = "gas_station";
                 break;
             case HOSPITAL:
                 message = "hospital";

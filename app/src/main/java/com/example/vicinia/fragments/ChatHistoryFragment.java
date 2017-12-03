@@ -9,14 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.vicinia.R;
-import com.example.vicinia.adapters.MessageAdapter;
+import com.example.vicinia.adapters.ChatMessageAdapter;
 import com.example.vicinia.pojos.ChatMessage;
 
 public class ChatHistoryFragment extends Fragment {
     ChatMessage lastMessage = null;
 
     ListView mChatHistory;
-    private static MessageAdapter adapter;
+    private static ChatMessageAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class ChatHistoryFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mChatHistory = view.findViewById(R.id.chat_history);
 
-        adapter = new MessageAdapter(getActivity());
+        adapter = new ChatMessageAdapter(getActivity());
         mChatHistory.setAdapter(adapter);
     }
 
@@ -43,6 +43,7 @@ public class ChatHistoryFragment extends Fragment {
     }
 
     public void sendTypingMessage(String initialMessage){
+        initialMessage = "<i>"+initialMessage+"</i>";
         lastMessage = new ChatMessage(initialMessage, true);
         adapter.add(lastMessage);
 

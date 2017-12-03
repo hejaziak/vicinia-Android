@@ -25,7 +25,7 @@ public class ChatMessageFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        this.parent =  (MainActivity) getActivity();
+        this.parent = (MainActivity) getActivity();
 
         return inflater.inflate(R.layout.fragment_chat_message, parent, false);
     }
@@ -41,15 +41,16 @@ public class ChatMessageFragment extends Fragment {
         this.gps = this.parent.gpsServices;
         super.onResume();
     }
+
     /**
      * This method constructs the URL (using {@link UrlUtilities}) for the chat url ,
      * and fires off an AsyncTask to perform the POST request using {@link com.example.vicinia.client.ChatMessageClient.ApiPostTask}
      */
-    public void onChatButton(View v){
+    public void onChatButton(View v) {
         String message = mChatMessage.getText().toString();
-        if(message.length() < 2)
+        if (message.length() < 2)
             return;
-        
+
         mChatMessage.setText("");
 
         parent.onSendMessage(message);
@@ -58,7 +59,7 @@ public class ChatMessageFragment extends Fragment {
         double lng = gps.getLongitude();
 
         Location location = gps.getLastLocation();
-        if(location != null){
+        if (location != null) {
             lat = location.getLatitude();
             lng = location.getLongitude();
         }
