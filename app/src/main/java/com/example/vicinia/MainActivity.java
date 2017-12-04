@@ -1,5 +1,6 @@
 package com.example.vicinia;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,28 +10,42 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.example.vicinia.activities.SplashActivity;
 import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.fragments.ChatMessageFragment;
 import com.example.vicinia.fragments.QuickActionFragment;
+import com.example.vicinia.services.ChatMessageServices;
 import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.DialogUtilities;
 
+import org.json.JSONObject;
+
 import static com.example.vicinia.services.ChatMessageServices.getDetails;
+import static com.example.vicinia.utilities.DialogUtilities.gpsErrorBuilder;
 import static com.example.vicinia.utilities.DialogUtilities.helpDialogBuilder;
 import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogBuider;
 
 public class MainActivity extends AppCompatActivity {
-    static MainActivity instance;
-    FragmentManager fragmentManager;
+    private static final String TAG = "VICINIA/MainActivity";
 
-    public String uuid;
+    public static MainActivity instance;
 
     public GpsServices gpsServices;
+    private FragmentManager fragmentManager;
 
+    //uuid received from backend
+    private String uuid;
+
+    //fragments
     private ChatMessageFragment fChatMessage;
     private ChatHistoryFragment fChatHistory;
     private QuickActionFragment fQuickAction;
 
+    /**
+     * callback function when activity is being created
+     *
+     * @param savedInstanceState information about state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,18 +63,35 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
+    /**
+     * callback function when activity starts
+     * start gps
+     *
+     * @called_from: none
+     * @calls: {@link GpsServices#onStart()}
+     */
     @Override
     protected void onStart() {
         super.onStart();
         gpsServices.onStart();
     }
 
+    /**
+     * callback function when activity is stopped
+     * stop gps
+     *
+     * @called_from: none
+     * @calls: {@link GpsServices#onStop()}
+     */
     @Override
     protected void onStop() {
         super.onStop();
         gpsServices.onStop();
     }
 
+    /**
+     * callback function when activity populates Actionbar
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -67,11 +99,18 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * callback function when activity an item in the
+     * Actionbar is selected
+     *
+     * @called_from: none
+     * @calls: {@link DialogUtilities#helpDialogBuilder(Context)}
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
 
-        switch (itemThatWasClickedId){
+        switch (itemThatWasClickedId) {
             case R.id.btn_help:
                 helpDialogBuilder(this);
                 return true;
@@ -82,14 +121,35 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * called whenever send button is pressed
+     * @param message message to be sent
+     *
+     * @called_from: {@link ChatMessageFragment#onChatButton(View v)}
+     * @calls: {@link ChatHistoryFragment#onSendMessage(String)}
+     * {@link ChatHistoryFragment#sendTypingMessage()}
+     */
     public void onSendMessage(String message) {
         fChatHistory.onSendMessage(message);
         fChatHistory.sendTypingMessage();
     }
 
-    public void onReceiveMessage(String message) { fChatHistory.onReceiveMessage(message); }
+    /**
+     * called whenever reply is received
+     * @param message message to be sent
+     *
+     * @called_from: {@link SplashActivity#onStop()}
+     * {@link ChatMessageServices#onChatResponse(JSONObject)}
+     * {@link ChatMessageServices#onDetailsResponse(JSONObject)}
+     * @calls: {@link ChatHistoryFragment#onReceiveMessage(String)}
+     */
+    public void onReceiveMessage(String message) {
+        fChatHistory.onReceiveMessage(message);
+    }
 
-    public void onChatButton(View v) { fChatMessage.onChatButton(v);  }
+    public void onChatButton(View v) {
+        fChatMessage.onChatButton(v);
+    }
 
     public void onCinemaButton(View v) {
         fQuickAction.onCinemaButton();
@@ -119,14 +179,23 @@ public class MainActivity extends AppCompatActivity {
         fChatHistory.sendTypingMessage();
     }
 
-    public static MainActivity getInstance() { return instance; }
+    public ChatMessageFragment getChatMessageFragment() { return fChatMessage; }
 
-    public ChatMessageFragment getfChatMessage() { return fChatMessage; }
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     public void onInternetError() {
         internetErrorDialogBuider(this);
     }
 
-    public void onGpsError() { DialogUtilities.gpsErrorBuilder(this); }
+    public void onGpsError() { gpsErrorBuilder(this); }
 
+    public static MainActivity getInstance() {
+        return instance;
+    }
 }
