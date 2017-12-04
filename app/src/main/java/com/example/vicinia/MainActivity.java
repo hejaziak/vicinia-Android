@@ -142,11 +142,9 @@ public class MainActivity extends AppCompatActivity {
      *               {@link ChatMessageServices#onChatResponse(JSONObject)}
      *               {@link ChatMessageServices#onDetailsResponse(JSONObject)}
      * @calls:       {@link ChatHistoryFragment#onReceiveMessage(String)}
-     *               {@link #enableAllButtons()}
      */
     public void onReceiveMessage(String message) {
         fChatHistory.onReceiveMessage(message);
-        enableAllButtons();
     }
 
     /**
@@ -155,11 +153,9 @@ public class MainActivity extends AppCompatActivity {
      *
      * @called_from: none
      * @calls:  {@link ChatMessageFragment#onChatButton()}
-     *          {@link #disableAllButtons()}
      */
     public void onChatButton(View v) {
         fChatMessage.onChatButton();
-        disableAllButtons();
     }
 
     /**
@@ -169,12 +165,10 @@ public class MainActivity extends AppCompatActivity {
      * @called_from: none
      * @calls:  {@link ChatMessageFragment#onChatButton()}
      *          {@link ChatHistoryFragment#sendTypingMessage(String)}
-     *          {@link #disableAllButtons()}
      */
     public void onCinemaButton(View v) {
         fQuickAction.onCinemaButton();
         fChatHistory.sendTypingMessage("Getting nearby cinemas...");
-        disableAllButtons();
     }
 
     /**
@@ -184,12 +178,10 @@ public class MainActivity extends AppCompatActivity {
      * @called_from: none
      * @calls:  {@link ChatMessageFragment#onChatButton()}
      *          {@link ChatHistoryFragment#sendTypingMessage(String)}
-     *          {@link #disableAllButtons()}
      */
     public void onGasStationButton(View v) {
         fQuickAction.onGasStationButton();
         fChatHistory.sendTypingMessage("Getting nearby gas stations...");
-        disableAllButtons();
     }
 
     /**
@@ -199,12 +191,10 @@ public class MainActivity extends AppCompatActivity {
      * @called_from: none
      * @calls:  {@link ChatMessageFragment#onChatButton()}
      *          {@link ChatHistoryFragment#sendTypingMessage(String)}
-     *          {@link #disableAllButtons()}
      */
     public void onHospitalButton(View v) {
         fQuickAction.onHospitalButton();
         fChatHistory.sendTypingMessage("Getting nearby hospitals...");
-        disableAllButtons();
     }
 
     /**
@@ -214,12 +204,10 @@ public class MainActivity extends AppCompatActivity {
      * @called_from: none
      * @calls:  {@link ChatMessageFragment#onChatButton()}
      *          {@link ChatHistoryFragment#sendTypingMessage(String)}
-     *          {@link #disableAllButtons()}
      */
     public void onRestaurantButton(View v) {
         fQuickAction.onRestaurantButton();
         fChatHistory.sendTypingMessage("Getting nearby restaurants...");
-        disableAllButtons();
     }
 
     /**
@@ -229,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
      * @called_from: none
      * @calls:  {@link ChatMessageServices#getDetails(String, double, double)}
      *          {@link ChatHistoryFragment#sendTypingMessage()}
-     *          {@link #disableAllButtons()}
      */
     public void onGetDetailsButton(String placeID) {
         double lat = gpsServices.getLatitude();
@@ -237,36 +224,6 @@ public class MainActivity extends AppCompatActivity {
         getDetails(placeID, lat, lng);
 
         fChatHistory.sendTypingMessage();
-        disableAllButtons();
-    }
-
-    /**
-     * enables all buttons
-     *
-     * @called_from: {@link #onReceiveMessage(String)}
-     * @calls:  {@link ChatMessageFragment#enableAllButtons()}
-     *          {@link QuickActionFragment#enableAllButtons()}
-     */
-    public void enableAllButtons(){
-        fChatMessage.enableAllButtons();
-        fQuickAction.enableAllButtons();
-    }
-
-    /**
-     * enables all buttons
-     *
-     * @called_from: {@link #onSendMessage(String)}
-     *               {@link #onGasStationButton(View)}
-     *               {@link #onCinemaButton(View)}
-     *               {@link #onHospitalButton(View)}
-     *               {@link #onRestaurantButton(View)}
-     *               {@link #onGetDetailsButton(String)}
-     * @calls:       {@link ChatMessageFragment#disableAllButtons()}
-     *               {@link QuickActionFragment#disableAllButtons()}
-     */
-    public void disableAllButtons(){
-        fChatMessage.disableAllButtons();
-        fQuickAction.disableAllButtons();
     }
 
     public void onInternetError() {

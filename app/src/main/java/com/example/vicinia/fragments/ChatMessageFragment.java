@@ -54,14 +54,6 @@ public class ChatMessageFragment extends Fragment {
         sendChatMessage(message, lat, lng);
     }
 
-    public void disableAllButtons(){
-        mChatButton.setEnabled(false);
-    }
-
-    public void enableAllButtons(){
-        mChatButton.setEnabled(true);
-    }
-
     public EditText getmChatMessage() {
         return mChatMessage;
     }

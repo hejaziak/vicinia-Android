@@ -59,8 +59,15 @@ public class ChatHistoryFragment extends Fragment {
 
     public void sendTypingMessage(String initialMessage) {
         initialMessage = "<i>" + initialMessage + "</i>";
-        lastMessage = new ChatMessage(initialMessage, true);
-        adapter.add(lastMessage);
+        
+        if (lastMessage != null) {
+            lastMessage.setContent(initialMessage);
+
+            adapter.notifyDataSetChanged();
+        } else {
+            lastMessage = new ChatMessage(initialMessage, true);
+            adapter.add(lastMessage);
+        }
 
         scrollDown();
     }

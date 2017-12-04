@@ -65,18 +65,4 @@ public class QuickActionFragment extends Fragment{
 
         sendChatMessage(message, lat, lng);
     }
-
-    public void disableAllButtons(){
-        mCinemaButton.setEnabled(false);
-        mGasStationButton.setEnabled(false);
-        mHospitalButton.setEnabled(false);
-        mRestaurantButton.setEnabled(false);
-    }
-
-    public void enableAllButtons(){
-        mCinemaButton.setEnabled(true);
-        mGasStationButton.setEnabled(true);
-        mHospitalButton.setEnabled(true);
-        mRestaurantButton.setEnabled(true);
-    }
 }
