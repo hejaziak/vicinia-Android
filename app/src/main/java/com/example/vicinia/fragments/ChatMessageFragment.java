@@ -17,11 +17,10 @@ import com.example.vicinia.utilities.UrlUtilities;
 import static com.example.vicinia.services.ChatMessageServices.sendChatMessage;
 
 public class ChatMessageFragment extends Fragment {
-    MainActivity parent;
-    GpsServices gps;
+    private MainActivity parent;
 
-    EditText mChatMessage;
-    ImageButton mChatButton;
+    private EditText mChatMessage;
+    private ImageButton mChatButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -36,37 +35,41 @@ public class ChatMessageFragment extends Fragment {
         mChatMessage = view.findViewById(R.id.et_message);
     }
 
-    @Override
-    public void onResume() {
-        this.gps = this.parent.gpsServices;
-        super.onResume();
-    }
-
     /**
      * This method constructs the URL (using {@link UrlUtilities}) for the chat url ,
      * and fires off an AsyncTask to perform the POST request using {@link com.example.vicinia.clients.ChatMessageClient.ApiPostTask}
      */
-    public void onChatButton(View v) {
+    public void onChatButton() {
         String message = mChatMessage.getText().toString();
         if (message.length() < 1)
             return;
 
+        mChatButton.setEnabled(false);
         mChatMessage.setText("");
 
         // for the UI
         parent.onSendMessage(message);
 
-        double lat = gps.getLatitude();
-        double lng = gps.getLongitude();
-
         // For the api
-
-        Location location = gps.getLastLocation();
-        if (location != null) {
-            lat = location.getLatitude();
-            lng = location.getLongitude();
-        }
+        double lat = parent.gpsServices.getLatitude();
+        double lng = parent.gpsServices.getLongitude();
 
         sendChatMessage(message, lat, lng);
+    }
+
+    public void disableAllButtons(){
+        mChatButton.setEnabled(false);
+    }
+
+    public void enableAllButtons(){
+        mChatButton.setEnabled(true);
+    }
+
+    public EditText getmChatMessage() {
+        return mChatMessage;
+    }
+
+    public ImageButton getmChatButton() {
+        return mChatButton;
     }
 }

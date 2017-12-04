@@ -39,7 +39,7 @@ public class ChatHistoryFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 InputMethodManager imm = (InputMethodManager) MainActivity.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(MainActivity.getInstance().getChatMessageFragment().mChatMessage.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(MainActivity.getInstance().getChatMessageFragment().getmChatMessage().getWindowToken(), 0);
 
                 return false;
             }

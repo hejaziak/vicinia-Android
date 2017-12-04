@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
      * called whenever send button is pressed
      * @param message message to be sent
      *
-     * @called_from: {@link ChatMessageFragment#onChatButton(View v)}
+     * @called_from: {@link ChatMessageFragment#onChatButton()}
      * @calls: {@link ChatHistoryFragment#onSendMessage(String)}
      * {@link ChatHistoryFragment#sendTypingMessage()}
      */
@@ -145,30 +145,36 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onReceiveMessage(String message) {
         fChatHistory.onReceiveMessage(message);
+        enableAllButtons();
     }
 
     public void onChatButton(View v) {
-        fChatMessage.onChatButton(v);
+        fChatMessage.onChatButton();
+        disableAllButtons();
     }
 
     public void onCinemaButton(View v) {
         fQuickAction.onCinemaButton();
         fChatHistory.sendTypingMessage("Getting nearby cinemas...");
+        disableAllButtons();
     }
 
     public void onGasStationButton(View v) {
         fQuickAction.onGasStationButton();
         fChatHistory.sendTypingMessage("Getting nearby gas stations...");
+        disableAllButtons();
     }
 
     public void onHospitalButton(View v) {
         fQuickAction.onHospitalButton();
         fChatHistory.sendTypingMessage("Getting nearby hospitals...");
+        disableAllButtons();
     }
 
     public void onRestaurantButton(View v) {
         fQuickAction.onRestaurantButton();
         fChatHistory.sendTypingMessage("Getting nearby restaurants...");
+        disableAllButtons();
     }
 
     public void onGetDetailsButton(String placeID) {
@@ -177,6 +183,17 @@ public class MainActivity extends AppCompatActivity {
         getDetails(placeID, lat, lng);
 
         fChatHistory.sendTypingMessage();
+        disableAllButtons();
+    }
+
+    public void enableAllButtons(){
+        fChatMessage.enableAllButtons();
+        fQuickAction.enableAllButtons();
+    }
+
+    public void disableAllButtons(){
+        fChatMessage.disableAllButtons();
+        fQuickAction.disableAllButtons();
     }
 
     public ChatMessageFragment getChatMessageFragment() { return fChatMessage; }

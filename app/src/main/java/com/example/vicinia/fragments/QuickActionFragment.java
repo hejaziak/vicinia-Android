@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
-import com.example.vicinia.services.GpsServices;
 
 import static com.example.vicinia.services.ChatMessageServices.sendChatMessage;
 
@@ -17,7 +16,6 @@ public class QuickActionFragment extends Fragment{
     public enum QUICK_ACTIONS {CINEMA, RESTAURANT, GAS_STATION, HOSPITAL}
 
     MainActivity parent;
-    GpsServices gps;
 
     ImageButton mCinemaButton;
     ImageButton mGasStationButton;
@@ -39,11 +37,6 @@ public class QuickActionFragment extends Fragment{
         mRestaurantButton = view.findViewById(R.id.btn_restaurant);
     }
 
-    @Override
-    public void onResume() {
-        this.gps = this.parent.gpsServices;
-        super.onResume();
-    }
 
     public void onCinemaButton(){ onQuickActionButton(QUICK_ACTIONS.CINEMA); }
     public void onGasStationButton(){ onQuickActionButton(QUICK_ACTIONS.GAS_STATION); }
@@ -68,9 +61,23 @@ public class QuickActionFragment extends Fragment{
                 break;
         }
 
-        double lat = gps.getLatitude();
-        double lng = gps.getLongitude();
+        double lat = parent.gpsServices.getLatitude();
+        double lng = parent.gpsServices.getLongitude();
 
         sendChatMessage(message, lat, lng);
+    }
+
+    public void disableAllButtons(){
+        mCinemaButton.setEnabled(false);
+        mGasStationButton.setEnabled(false);
+        mHospitalButton.setEnabled(false);
+        mRestaurantButton.setEnabled(false);
+    }
+
+    public void enableAllButtons(){
+        mCinemaButton.setEnabled(true);
+        mGasStationButton.setEnabled(true);
+        mHospitalButton.setEnabled(true);
+        mRestaurantButton.setEnabled(true);
     }
 }
