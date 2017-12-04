@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Vicinia</string>
+
+    <string name="btn_help">help</string>
+
+    <string name="text_quick_action">Get Nearby :</string>
+    <string name="btn_restaurant">get nearby restaurants</string>
+    <string name="btn_hospital">get nearby hospitals</string>
+    <string name="btn_cinema">get nearby cinemas</string>
+    <string name="btn_gas_stations">get nearby gas stations</string>
+
+    <string name="chat_response">I found these places for you</string>
+    <string name="get_details_string">Get Details</string>
 </resources>

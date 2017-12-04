@@ -1,127 +1,248 @@
 package com.example.vicinia;
 
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.view.WindowManager;
 
-import com.example.vicinia.utilities.ChatUtils;
+import com.example.vicinia.activities.SplashActivity;
+import com.example.vicinia.fragments.ChatHistoryFragment;
+import com.example.vicinia.fragments.ChatMessageFragment;
+import com.example.vicinia.fragments.QuickActionFragment;
+import com.example.vicinia.services.ChatMessageServices;
+import com.example.vicinia.services.GpsServices;
+import com.example.vicinia.utilities.DialogUtilities;
 
-import java.io.IOException;
-import java.net.URL;
+import org.json.JSONObject;
 
-import static com.example.vicinia.utilities.ChatUtils.buildChatUrl;
-import static com.example.vicinia.utilities.ChatUtils.buildDetailsUrl;
-import static com.example.vicinia.utilities.ChatUtils.buildWelcomeUrl;
-import static com.example.vicinia.utilities.ChatUtils.getResponseFromHttpUrl;
+import static com.example.vicinia.services.ChatMessageServices.getDetails;
+import static com.example.vicinia.utilities.DialogUtilities.gpsErrorBuilder;
+import static com.example.vicinia.utilities.DialogUtilities.helpDialogBuilder;
+import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogBuider;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "VICINIA/MainActivity";
 
-    TextView mTextView;
+    public static MainActivity instance;
 
-    Button mChatButton;
-    Button mWelcomeButton;
-    Button mDetailstButton;
+    public GpsServices gpsServices;
+    private FragmentManager fragmentManager;
 
-    private ProgressBar mLoadingIndicator;
-    private TextView mErrorMessageDisplay;
+    //uuid received from backend
+    private String uuid;
 
+    //fragments
+    private ChatMessageFragment fChatMessage;
+    private ChatHistoryFragment fChatHistory;
+    private QuickActionFragment fQuickAction;
+
+    /**
+     * callback function when activity is being created
+     *
+     * @param savedInstanceState information about state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextView = (TextView) findViewById(R.id.textView);
-        mWelcomeButton = (Button) findViewById(R.id.welome_button);
-        mChatButton = (Button) findViewById(R.id.chat_button);
-        mDetailstButton = (Button) findViewById(R.id.details_button);
-        mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
-        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        instance = this;
+        fragmentManager = getSupportFragmentManager();
+        gpsServices = new GpsServices(this);
 
-        mWelcomeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onWelcomeButton();
-            }
-        });
+        fChatMessage = (ChatMessageFragment) fragmentManager.findFragmentById(R.id.chat_message_fragment);
+        fChatHistory = (ChatHistoryFragment) fragmentManager.findFragmentById(R.id.chat_history_fragment);
+        fQuickAction = (QuickActionFragment) fragmentManager.findFragmentById(R.id.quick_actions_fragment);
 
-        mChatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTextView.setText(buildChatUrl().toString());
-            }
-        });
-
-        mDetailstButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTextView.setText(buildDetailsUrl("{placeID}").toString());
-            }
-        });
+        //hide keyboard at startup
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     /**
-     * This method constructs the URL (using {@link ChatUtils}) for the welcome url ,
-     * displays that URL in a TextView,
-     * and finally fires off an AsyncTask to perform the GET request using {@link APIQueryTask}
+     * callback function when activity starts
+     * start gps
+     *
+     * @called_from: none
+     * @calls: {@link GpsServices#onStart()}
      */
-    private void onWelcomeButton() {
-        URL url = buildWelcomeUrl();
-        mTextView.setText(url.toString());
-        new APIQueryTask().execute(url);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        gpsServices.onStart();
     }
 
     /**
-     * This method will make the View for the JSON data visible and
-     * hide the error message.
+     * callback function when activity is stopped
+     * stop gps
+     *
+     * @called_from: none
+     * @calls: {@link GpsServices#onStop()}
      */
-    private void showJsonDataView() {
-        mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-        mTextView.setVisibility(View.VISIBLE);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        gpsServices.onStop();
     }
 
     /**
-     * This method will make the error message visible and hide the JSON
-     * View.
+     * callback function when activity populates Actionbar
      */
-    private void showErrorMessage() {
-        mTextView.setVisibility(View.INVISIBLE);
-        mErrorMessageDisplay.setVisibility(View.VISIBLE);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
     }
 
-    public class APIQueryTask extends AsyncTask<URL, Void, String> {
+    /**
+     * callback function when activity an item in the
+     * Actionbar is selected
+     *
+     * @called_from: none
+     * @calls: {@link DialogUtilities#helpDialogBuilder(Context)}
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemThatWasClickedId = item.getItemId();
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+        switch (itemThatWasClickedId) {
+            case R.id.btn_help:
+                helpDialogBuilder(this);
+                return true;
+            default:
+                break;
         }
 
-        @Override
-        protected String doInBackground(URL... params) {
-            URL searchUrl = params[0];
-            String response = null;
-            try {
-                response = getResponseFromHttpUrl(searchUrl);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return response;
-        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        @Override
-        protected void onPostExecute(String response) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (/* githubSearchResults != null && */ !response.equals("")) {
-                showJsonDataView();
-                mTextView.setText(response);
-            } else {
-                showErrorMessage();
-            }
-        }
+    /**
+     * called whenever send button is pressed
+     * @param message message to be sent
+     *
+     * @called_from: {@link ChatMessageFragment#onChatButton()}
+     * @calls: {@link ChatHistoryFragment#onSendMessage(String)}
+     * {@link ChatHistoryFragment#sendTypingMessage()}
+     */
+    public void onSendMessage(String message) {
+        fChatHistory.onSendMessage(message);
+        fChatHistory.sendTypingMessage();
+    }
+
+    /**
+     * called whenever reply is received
+     * @param message message to be sent
+     *
+     * @called_from: {@link SplashActivity#onStop()}
+     *               {@link ChatMessageServices#onChatResponse(JSONObject)}
+     *               {@link ChatMessageServices#onDetailsResponse(JSONObject)}
+     * @calls:       {@link ChatHistoryFragment#onReceiveMessage(String)}
+     */
+    public void onReceiveMessage(String message) {
+        fChatHistory.onReceiveMessage(message);
+    }
+
+    /**
+     * called whenever send button is pressed
+     * @param v the view (button)
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageFragment#onChatButton()}
+     */
+    public void onChatButton(View v) {
+        fChatMessage.onChatButton();
+    }
+
+    /**
+     * called whenever cinema button is pressed
+     * @param v the view (button)
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageFragment#onChatButton()}
+     *          {@link ChatHistoryFragment#sendTypingMessage(String)}
+     */
+    public void onCinemaButton(View v) {
+        fQuickAction.onCinemaButton();
+        fChatHistory.sendTypingMessage("Getting nearby cinemas...");
+    }
+
+    /**
+     * called whenever gas station button is pressed
+     * @param v the view (button)
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageFragment#onChatButton()}
+     *          {@link ChatHistoryFragment#sendTypingMessage(String)}
+     */
+    public void onGasStationButton(View v) {
+        fQuickAction.onGasStationButton();
+        fChatHistory.sendTypingMessage("Getting nearby gas stations...");
+    }
+
+    /**
+     * called whenever hospital button is pressed
+     * @param v the view (button)
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageFragment#onChatButton()}
+     *          {@link ChatHistoryFragment#sendTypingMessage(String)}
+     */
+    public void onHospitalButton(View v) {
+        fQuickAction.onHospitalButton();
+        fChatHistory.sendTypingMessage("Getting nearby hospitals...");
+    }
+
+    /**
+     * called whenever restaurant button is pressed
+     * @param v the view (button)
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageFragment#onChatButton()}
+     *          {@link ChatHistoryFragment#sendTypingMessage(String)}
+     */
+    public void onRestaurantButton(View v) {
+        fQuickAction.onRestaurantButton();
+        fChatHistory.sendTypingMessage("Getting nearby restaurants...");
+    }
+
+    /**
+     * called whenever details button is pressed
+     * @param placeID id of place in interest
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageServices#getDetails(String, double, double)}
+     *          {@link ChatHistoryFragment#sendTypingMessage()}
+     */
+    public void onGetDetailsButton(String placeID) {
+        double lat = gpsServices.getLatitude();
+        double lng = gpsServices.getLongitude();
+        getDetails(placeID, lat, lng);
+
+        fChatHistory.sendTypingMessage();
+    }
+
+    public void onInternetError() {
+        internetErrorDialogBuider(this);
+    }
+
+    public void onGpsError() { gpsErrorBuilder(this); }
+
+    public ChatMessageFragment getChatMessageFragment() { return fChatMessage; }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public static MainActivity getInstance() {
+        return instance;
     }
 }

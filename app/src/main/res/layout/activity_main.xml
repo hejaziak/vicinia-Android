@@ -5,66 +5,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.vicinia.MainActivity">
+    android:orientation="vertical"
+    android:id="@+id/main_layout"
+    tools:context=".MainActivity">
 
-        <Button
-            android:id="@+id/welome_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onWelcress"
-            android:text="Welcome"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+        <!-- Chat History -->
+        <fragment
+            android:name="com.example.vicinia.fragments.ChatHistoryFragment"
+            android:id="@+id/chat_history_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.369" />
+            app:layout_constraintBottom_toTopOf="@+id/chat_message_fragment"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="40dp"/>
 
-        <Button
-            android:id="@+id/chat_button"
-            android:layout_width="wrap_content"
+        <!-- Chat Message -->
+        <fragment
+            android:name="com.example.vicinia.fragments.ChatMessageFragment"
+            android:id="@+id/chat_message_fragment"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chat"
+            app:layout_constraintTop_toBottomOf="@+id/chat_history_fragment"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/quick_actions_fragment" />
+
+        <!-- Quick Actions -->
+        <fragment
+            android:id="@+id/quick_actions_fragment"
+            android:name="com.example.vicinia.fragments.QuickActionFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/details_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Details"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.637" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="URL"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.77" />
-
-        <TextView
-            android:id="@+id/tv_error_message_display"
-            android:textSize="22sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="Oops"
-            android:visibility="invisible" />
-
-        <ProgressBar
-            android:id="@+id/pb_loading_indicator"
-            android:layout_height="42dp"
-            android:layout_width="42dp"
-            android:layout_gravity="center"
-            android:visibility="invisible" />
+            app:layout_constraintTop_toBottomOf="@+id/chat_message_fragment" />
 </android.support.constraint.ConstraintLayout>
