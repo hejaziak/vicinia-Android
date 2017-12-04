@@ -26,7 +26,7 @@ public class SplashActivity extends Activity {
     //request identifier
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 33;
 
-    public static SplashActivity instance;
+    static SplashActivity instance;
 
     //place holder for /welcome responses
     private String uuid;
