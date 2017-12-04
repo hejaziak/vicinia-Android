@@ -2,37 +2,41 @@ package com.example.vicinia.utilities;
 
 import android.net.Uri;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
+import com.example.vicinia.services.ChatMessageServices;
+
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Scanner;
 
 /**
- * These utilities will be used to communicate with the Chatbot.
+ * These utilities will be used to communicate with the Backend.
  */
 public class UrlUtilities {
-    public static enum API_METHODS {GET_WELCOME, GET_DETAILS, POST_CHAT}
+    private static final String TAG = "VICINITA/UrlUtilities";
 
-    final static String CHATBOT_BASE_URL = "https://vicinia.herokuapp.com";
+    //enum specifying all routs + methods
+    public enum API_METHODS {GET_WELCOME, GET_DETAILS, POST_CHAT}
 
-    final static String DEBUG_URL = "192.168.1.2";
-    final static String DEBUG_PORT = "8080";
-    final static boolean DEBUG_MODE = false;
-
-    final static String WELCOME_PATH = "welcome";
-    final static String CHAT_PATH = "chat";
-    final static String DETAILS_PATH = "placeDetails";
-
-    final static String ID_PARAM = "place_id";
-    final static String LAT_PARAM = "latitude";
-    final static String LNG_PARAM = "longitude";
+    //deployed backend details
+    private final static String BACKEND_BASE_URL = "https://vicinia.herokuapp.com";
+    //localhost details
+    private final static String DEBUG_URL = "192.168.1.2";
+    private final static String DEBUG_PORT = "8080";
+    private final static boolean DEBUG_MODE = false;
+    //routes to consider
+    private final static String WELCOME_PATH = "welcome";
+    private final static String CHAT_PATH = "chat";
+    private final static String DETAILS_PATH = "placeDetails";
+    //query params for placeDetails url
+    private final static String ID_PARAM = "place_id";
+    private final static String LAT_PARAM = "latitude";
+    private final static String LNG_PARAM = "longitude";
 
     /**
      * Builds the URL used to communicate with API @ /welcome
-     *
      * @return The URL to use.
+     *
+     * @called_from:   {@link ChatMessageServices#getWelcome()}
+     * @calls          {@link #buildUrl(API_METHODS, String[])}
      */
     public static URL buildWelcomeUrl() {
         return buildUrl(API_METHODS.GET_WELCOME, null);
@@ -40,18 +44,23 @@ public class UrlUtilities {
 
     /**
      * Builds the URL used to communicate with API @ /chat
-     *
      * @return The URL to use.
+     *
+     * @called_from:   {@link ChatMessageServices#sendChatMessage(String, double, double)}
+     * @calls          {@link #buildUrl(API_METHODS, String[])}
      */
     public static URL buildChatUrl() {
         return buildUrl(API_METHODS.POST_CHAT, null);
     }
 
     /**
-     * Builds the URL used to communicate with API @ /details/{placeID}
+     * Builds the URL used to communicate with API @ /placeDetails?placed_id= &latitude= &longitude =
      *
      * @param placeID contains placeID if function is details.
      * @return The URL to use.
+     *
+     * @called_from:   {@link ChatMessageServices#getDetails(String, double, double)}
+     * @calls          {@link #buildUrl(API_METHODS, String[])}
      */
     public static URL buildDetailsUrl(String placeID, double lat, double lng) {
         String[] queryParams = {placeID, Double.toString(lat), Double.toString(lng)};
@@ -59,15 +68,21 @@ public class UrlUtilities {
     }
 
     /**
+     * handles the actual url building
      * Builds the URL used to communicate with API
-     *
-     * @param function char denoting function.
+     * @param function enum{@link API_METHODS} denoting function.
      * @param queryParams contains a list of query parameters
      * @return The URL to use.
+     *
+     * @called_from:    {@link #buildWelcomeUrl()}
+     *                  {@link #buildUrl(API_METHODS, String[])}
+     *                  {@link #buildChatUrl()}
+     * @calls none
      */
-    public static URL buildUrl(API_METHODS function, String[] queryParams) {
-        Uri.Builder uriBuilder = Uri.parse(CHATBOT_BASE_URL).buildUpon();
+    private static URL buildUrl(API_METHODS function, String[] queryParams) {
+        Uri.Builder uriBuilder = Uri.parse(BACKEND_BASE_URL).buildUpon();
 
+        //used to connect to local backend in case of debugging
         if (DEBUG_MODE) {
             uriBuilder.encodedAuthority(DEBUG_URL + ":" + DEBUG_PORT);
             uriBuilder.scheme("http");
@@ -101,33 +116,6 @@ public class UrlUtilities {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
         return url;
-    }
-
-    /**
-     * This method returns the entire result from the HTTP response.
-     *
-     * @param url The URL to fetch the HTTP response from.
-     * @return The contents of the HTTP response.
-     * @throws IOException Related to network and stream reading
-     */
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream in = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-            if (hasInput) {
-                return scanner.next();
-            } else {
-                return null;
-            }
-        } finally {
-            urlConnection.disconnect();
-        }
     }
 }
