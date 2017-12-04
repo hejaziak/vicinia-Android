@@ -139,44 +139,98 @@ public class MainActivity extends AppCompatActivity {
      * @param message message to be sent
      *
      * @called_from: {@link SplashActivity#onStop()}
-     * {@link ChatMessageServices#onChatResponse(JSONObject)}
-     * {@link ChatMessageServices#onDetailsResponse(JSONObject)}
-     * @calls: {@link ChatHistoryFragment#onReceiveMessage(String)}
+     *               {@link ChatMessageServices#onChatResponse(JSONObject)}
+     *               {@link ChatMessageServices#onDetailsResponse(JSONObject)}
+     * @calls:       {@link ChatHistoryFragment#onReceiveMessage(String)}
+     *               {@link #enableAllButtons()}
      */
     public void onReceiveMessage(String message) {
         fChatHistory.onReceiveMessage(message);
         enableAllButtons();
     }
 
+    /**
+     * called whenever send button is pressed
+     * @param v the view (button)
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageFragment#onChatButton()}
+     *          {@link #disableAllButtons()}
+     */
     public void onChatButton(View v) {
         fChatMessage.onChatButton();
         disableAllButtons();
     }
 
+    /**
+     * called whenever cinema button is pressed
+     * @param v the view (button)
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageFragment#onChatButton()}
+     *          {@link ChatHistoryFragment#sendTypingMessage(String)}
+     *          {@link #disableAllButtons()}
+     */
     public void onCinemaButton(View v) {
         fQuickAction.onCinemaButton();
         fChatHistory.sendTypingMessage("Getting nearby cinemas...");
         disableAllButtons();
     }
 
+    /**
+     * called whenever gas station button is pressed
+     * @param v the view (button)
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageFragment#onChatButton()}
+     *          {@link ChatHistoryFragment#sendTypingMessage(String)}
+     *          {@link #disableAllButtons()}
+     */
     public void onGasStationButton(View v) {
         fQuickAction.onGasStationButton();
         fChatHistory.sendTypingMessage("Getting nearby gas stations...");
         disableAllButtons();
     }
 
+    /**
+     * called whenever hospital button is pressed
+     * @param v the view (button)
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageFragment#onChatButton()}
+     *          {@link ChatHistoryFragment#sendTypingMessage(String)}
+     *          {@link #disableAllButtons()}
+     */
     public void onHospitalButton(View v) {
         fQuickAction.onHospitalButton();
         fChatHistory.sendTypingMessage("Getting nearby hospitals...");
         disableAllButtons();
     }
 
+    /**
+     * called whenever restaurant button is pressed
+     * @param v the view (button)
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageFragment#onChatButton()}
+     *          {@link ChatHistoryFragment#sendTypingMessage(String)}
+     *          {@link #disableAllButtons()}
+     */
     public void onRestaurantButton(View v) {
         fQuickAction.onRestaurantButton();
         fChatHistory.sendTypingMessage("Getting nearby restaurants...");
         disableAllButtons();
     }
 
+    /**
+     * called whenever details button is pressed
+     * @param placeID id of place in interest
+     *
+     * @called_from: none
+     * @calls:  {@link ChatMessageServices#getDetails(String, double, double)}
+     *          {@link ChatHistoryFragment#sendTypingMessage()}
+     *          {@link #disableAllButtons()}
+     */
     public void onGetDetailsButton(String placeID) {
         double lat = gpsServices.getLatitude();
         double lng = gpsServices.getLongitude();
@@ -186,15 +240,40 @@ public class MainActivity extends AppCompatActivity {
         disableAllButtons();
     }
 
+    /**
+     * enables all buttons
+     *
+     * @called_from: {@link #onReceiveMessage(String)}
+     * @calls:  {@link ChatMessageFragment#enableAllButtons()}
+     *          {@link QuickActionFragment#enableAllButtons()}
+     */
     public void enableAllButtons(){
         fChatMessage.enableAllButtons();
         fQuickAction.enableAllButtons();
     }
 
+    /**
+     * enables all buttons
+     *
+     * @called_from: {@link #onSendMessage(String)}
+     *               {@link #onGasStationButton(View)}
+     *               {@link #onCinemaButton(View)}
+     *               {@link #onHospitalButton(View)}
+     *               {@link #onRestaurantButton(View)}
+     *               {@link #onGetDetailsButton(String)}
+     * @calls:       {@link ChatMessageFragment#disableAllButtons()}
+     *               {@link QuickActionFragment#disableAllButtons()}
+     */
     public void disableAllButtons(){
         fChatMessage.disableAllButtons();
         fQuickAction.disableAllButtons();
     }
+
+    public void onInternetError() {
+        internetErrorDialogBuider(this);
+    }
+
+    public void onGpsError() { gpsErrorBuilder(this); }
 
     public ChatMessageFragment getChatMessageFragment() { return fChatMessage; }
 
@@ -205,12 +284,6 @@ public class MainActivity extends AppCompatActivity {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
-
-    public void onInternetError() {
-        internetErrorDialogBuider(this);
-    }
-
-    public void onGpsError() { gpsErrorBuilder(this); }
 
     public static MainActivity getInstance() {
         return instance;

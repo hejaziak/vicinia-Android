@@ -37,7 +37,6 @@ public class QuickActionFragment extends Fragment{
         mRestaurantButton = view.findViewById(R.id.btn_restaurant);
     }
 
-
     public void onCinemaButton(){ onQuickActionButton(QUICK_ACTIONS.CINEMA); }
     public void onGasStationButton(){ onQuickActionButton(QUICK_ACTIONS.GAS_STATION); }
     public void onHospitalButton(){ onQuickActionButton(QUICK_ACTIONS.HOSPITAL); }

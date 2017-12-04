@@ -1,6 +1,5 @@
 package com.example.vicinia.fragments;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.ImageButton;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
-import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.UrlUtilities;
 
 import static com.example.vicinia.services.ChatMessageServices.sendChatMessage;
@@ -44,7 +42,6 @@ public class ChatMessageFragment extends Fragment {
         if (message.length() < 1)
             return;
 
-        mChatButton.setEnabled(false);
         mChatMessage.setText("");
 
         // for the UI
@@ -67,9 +64,5 @@ public class ChatMessageFragment extends Fragment {
 
     public EditText getmChatMessage() {
         return mChatMessage;
-    }
-
-    public ImageButton getmChatButton() {
-        return mChatButton;
     }
 }
