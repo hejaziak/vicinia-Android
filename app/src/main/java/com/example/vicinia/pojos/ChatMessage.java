@@ -54,7 +54,7 @@ public class ChatMessage {
      *
      * @return returns content
      * @called_from: {@link ChatMessageAdapter#getView(int, View, ViewGroup)}
-     * {@link ChatMessageAdapter#getItemViewType(int)}
+     * {@link ChatMessageAdapter#getView(int, View, ViewGroup)}
      * @calls: none
      */
     public boolean isLeftAligned() {

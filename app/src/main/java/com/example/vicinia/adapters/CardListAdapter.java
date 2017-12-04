@@ -21,39 +21,57 @@ import java.util.List;
 import static android.graphics.Color.rgb;
 
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardViewHolder> {
-    static final String TAG = "VICINIA/CardListAdapter";
+    private static final String TAG = "VICINIA/CardListAdapter";
 
-    List<String[]> places;
+    //list of places
+    private List<String[]> places;
 
-    public CardListAdapter(List<String[]> places) {
+    CardListAdapter(List<String[]> places) {
         this.places = places;
     }
 
+    /**
+     * get count of chat messages
+     *
+     * @return number of messages in {@link #places}
+     */
     @Override
     public int getItemCount() {
         return places.size();
     }
 
+    /**
+     * inflates the cards
+     *
+     * @param viewGroup the left_message.xml
+     * @param i         position in {@link #places}
+     * @return created ViewHolder
+     */
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_message, viewGroup, false);
-        CardViewHolder cardViewHolder = new CardViewHolder(v);
-        return cardViewHolder;
+        return new CardViewHolder(v);
     }
 
+    /**
+     * *binds* the data to a card
+     *
+     * @param cardViewHolder an instance of {@link CardViewHolder}
+     * @param i              position in {@link #places}
+     */
     @Override
     public void onBindViewHolder(CardViewHolder cardViewHolder, int i) {
-        Log.v(TAG, "onBind "+i);
+        Log.v(TAG, "onBind " + i);
 
         String[] place = places.get(i);
-        cardViewHolder.placeName.setText(Html.fromHtml("<b>"+place[0]+"<\\b>"));
+        cardViewHolder.placeName.setText(Html.fromHtml("<b>" + place[0] + "<\\b>"));
         cardViewHolder.placeDistance.setText(place[1]);
         cardViewHolder.placeRating.setText(place[2]);
-        cardViewHolder.placeRatingImg.setRating((int) Double.parseDouble(place[2]));
+        cardViewHolder.placeRatingImg.setRating(Float.parseFloat(place[2]));
 
-        cardViewHolder.placeID.setText("Get Details");
+        //configure button
+        cardViewHolder.placeID.setText(R.string.get_details_string);
         cardViewHolder.placeID.setTag(place[3]);
-
         cardViewHolder.placeID.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Button btn = (Button) v;
@@ -63,16 +81,22 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
             }
         });
 
-        Log.v(TAG, place[0]+" "+place[1]+" "+place[2]+" "+place[3]);
+        Log.v(TAG, place[0] + " " + place[1] + " " + place[2] + " " + place[3]);
     }
 
+    /**
+     * callback on RecyclerView.setAdapter(this)
+     */
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public static class CardViewHolder extends RecyclerView.ViewHolder {
-        CardView cv;
+    /**
+     * the individual card that will be inserted in the recycler view
+     */
+    static class CardViewHolder extends RecyclerView.ViewHolder {
+        CardView cardView;
         TextView placeName;
         TextView placeDistance;
         TextView placeRating;
@@ -81,7 +105,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
         CardViewHolder(View itemView) {
             super(itemView);
-            cv = itemView.findViewById(R.id.cv);
+            cardView = itemView.findViewById(R.id.cv);
             placeName = itemView.findViewById(R.id.place_name);
             placeDistance = itemView.findViewById(R.id.place_distance);
             placeRating = itemView.findViewById(R.id.place_rating);
@@ -95,5 +119,4 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
             stars.getDrawable(1).setColorFilter(rgb(218, 163, 22), PorterDuff.Mode.SRC_ATOP);
         }
     }
-
 }
