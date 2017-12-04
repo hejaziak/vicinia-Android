@@ -1,15 +1,12 @@
 package com.example.vicinia.fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 
@@ -19,10 +16,10 @@ import com.example.vicinia.adapters.ChatMessageAdapter;
 import com.example.vicinia.pojos.ChatMessage;
 
 public class ChatHistoryFragment extends Fragment {
-    ChatMessage lastMessage = null;
+    private ChatMessage lastMessage = null;
 
-    ListView mChatHistory;
-    private static ChatMessageAdapter adapter;
+    private ChatMessageAdapter adapter;
+    private ListView mChatHistory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -33,6 +30,7 @@ public class ChatHistoryFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mChatHistory = view.findViewById(R.id.chat_history);
 
+        //configure list view
         adapter = new ChatMessageAdapter(getActivity());
         mChatHistory.setAdapter(adapter);
 
@@ -40,42 +38,40 @@ public class ChatHistoryFragment extends Fragment {
         mChatHistory.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
                 InputMethodManager imm = (InputMethodManager) MainActivity.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(MainActivity.getInstance().getfChatMessage().mChatMessage.getWindowToken(), 0);
+                imm.hideSoftInputFromWindow(MainActivity.getInstance().getChatMessageFragment().mChatMessage.getWindowToken(), 0);
 
                 return false;
             }
         });
     }
 
-    public void onSendMessage(String message){
+    public void onSendMessage(String message) {
         ChatMessage newMessage = new ChatMessage(message, false);
         adapter.add(newMessage);
 
         scrollDown();
     }
 
-    public void sendTypingMessage(){
+    public void sendTypingMessage() {
         sendTypingMessage("typing...");
     }
 
-    public void sendTypingMessage(String initialMessage){
-        initialMessage = "<i>"+initialMessage+"</i>";
+    public void sendTypingMessage(String initialMessage) {
+        initialMessage = "<i>" + initialMessage + "</i>";
         lastMessage = new ChatMessage(initialMessage, true);
         adapter.add(lastMessage);
 
         scrollDown();
     }
 
-    public void onReceiveMessage(String message){
-        if(lastMessage != null){
+    public void onReceiveMessage(String message) {
+        if (lastMessage != null) {
             lastMessage.setContent(message);
             lastMessage = null;
 
             adapter.notifyDataSetChanged();
-        }
-        else{
+        } else {
             ChatMessage newMessage = new ChatMessage(message, true);
             adapter.add(newMessage);
         }
