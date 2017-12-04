@@ -64,18 +64,18 @@ public class HttpUtilities {
             //create httpResponse object to encapsulate all information
             HttpResponse httpResponse = new HttpResponse(requestURL, requestMethod, responseJSON, urlConnection.getResponseCode());
 
+            urlConnection.disconnect();
+
             return httpResponse;
         } catch (IOException e){
             Log.e(TAG, "IOException", e);
 
             //if error occurred specify the error code
-            return new HttpResponse(400);
+            return new HttpResponse(HttpURLConnection.HTTP_BAD_REQUEST);
         } catch (JSONException e){
             Log.e(TAG, "JSONException", e);
             e.printStackTrace();
             return null;
-        } finally {
-            urlConnection.disconnect();
         }
     }
 
@@ -127,20 +127,18 @@ public class HttpUtilities {
             //create httpResponse object to encapsulate all information
             HttpResponse httpResponse = new HttpResponse(requestURL, requestMethod, responseJSON, urlConnection.getResponseCode());
 
+            urlConnection.disconnect();
+
             return httpResponse;
         } catch (IOException e){
             Log.e(TAG, "IOException", e);
 
             //if error occurred specify the error code
-            return new HttpResponse(400);
+            return new HttpResponse(HttpURLConnection.HTTP_BAD_REQUEST);
         } catch (JSONException e){
             Log.e(TAG, "JSONException", e);
             e.printStackTrace();
             return null;
-        }
-
-        finally {
-            urlConnection.disconnect();
         }
     }
 
