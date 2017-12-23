@@ -60,9 +60,6 @@ public class QuickActionFragment extends Fragment{
                 break;
         }
 
-        double lat = parent.gpsServices.getLatitude();
-        double lng = parent.gpsServices.getLongitude();
-
-        sendChatMessage(message, lat, lng);
+        parent.sendChatMessage(message);
     }
 }

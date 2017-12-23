@@ -21,6 +21,7 @@ import com.example.vicinia.models.Place;
 import com.example.vicinia.services.ChatMessageServices;
 import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.DialogUtilities;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -269,6 +270,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
         fChatHistory.sendTypingMessage();
+    }
+
+    public void sendChatMessage(String message){
+        String lat = String.valueOf(gpsServices.getLatitude());
+        String lng = String.valueOf(gpsServices.getLongitude());
+
+        Message chatMessage = new Message(lat, lng, message);
+        ApiClient.getClient().postChat(uuid, chatMessage).enqueue(new Callback<Message>() {
+            @Override
+            public void onResponse(Call<Message> call, Response<Message> response) {
+                if (response.isSuccessful()) {
+                    Message message = response.body();
+
+                    if(message.getList() != null){
+                        Gson gson = new Gson();
+                        message.setMessage(gson.toJson(message.getList()));
+                    }
+                    
+                    System.out.println(message.getMessage());
+                    onReceiveMessage(message.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
     }
 
     public void onInternetError() {

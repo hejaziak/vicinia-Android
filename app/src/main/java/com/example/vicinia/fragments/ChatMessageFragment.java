@@ -48,10 +48,7 @@ public class ChatMessageFragment extends Fragment {
         parent.onSendMessage(message);
 
         // For the api
-        double lat = parent.gpsServices.getLatitude();
-        double lng = parent.gpsServices.getLongitude();
-
-        sendChatMessage(message, lat, lng);
+        parent.sendChatMessage(message);
     }
 
     public EditText getmChatMessage() {
