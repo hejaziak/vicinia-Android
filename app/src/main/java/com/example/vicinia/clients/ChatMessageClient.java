@@ -5,9 +5,13 @@ import android.os.AsyncTask;
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.pojos.HttpRequest;
 import com.example.vicinia.pojos.HttpResponse;
+import com.example.vicinia.pojos.Message;
+import com.example.vicinia.pojos.Place;
 import com.example.vicinia.services.ChatMessageServices;
 import com.example.vicinia.utilities.DialogUtilities;
 import com.example.vicinia.utilities.UrlUtilities;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
 
@@ -48,7 +52,7 @@ public class ChatMessageClient {
      *
      * @called_from: {@link ApiGetTask#onPostExecute(HttpResponse)}
      * @calls: {@link ChatMessageServices#onDetailsResponse(JSONObject)}
-     *         {@link ChatMessageServices#onWelcomeResponse(JSONObject)}
+     *         {@link ChatMessageServices#onWelcomeResponse(Message)}
      */
     private static void onGetResponse(HttpResponse response) {
         int responseStatus = response.getStatusCode();
@@ -57,12 +61,15 @@ public class ChatMessageClient {
             UrlUtilities.API_METHODS responseMethod = response.getMethod();
             JSONObject responseBody = response.getJsonObject();
 
+            Gson gson = new GsonBuilder().create();
             switch (responseMethod) {
                 case GET_WELCOME:
-                    onWelcomeResponse(responseBody);
+                    Message uuidMessage = gson.fromJson(responseBody.toString(), Message.class);
+                    onWelcomeResponse(uuidMessage);
                     break;
                 case GET_DETAILS:
-                    onDetailsResponse(responseBody);
+                    Place detailsMessage = gson.fromJson(responseBody.toString(), Place.class);
+                    onDetailsResponse(detailsMessage);
                     break;
                 default:
             }

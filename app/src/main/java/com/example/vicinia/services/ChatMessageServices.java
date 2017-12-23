@@ -11,6 +11,8 @@ import com.example.vicinia.fragments.ChatMessageFragment;
 import com.example.vicinia.fragments.QuickActionFragment;
 import com.example.vicinia.pojos.HttpRequest;
 import com.example.vicinia.pojos.HttpResponse;
+import com.example.vicinia.pojos.Message;
+import com.example.vicinia.pojos.Place;
 import com.example.vicinia.utilities.UrlUtilities;
 
 import org.json.JSONException;
@@ -48,18 +50,14 @@ public class ChatMessageServices {
      * @called_from: {@link ChatMessageClient#onGetResponse(HttpResponse)}
      * @calls: {@link SplashActivity#onLoadingFinish(String, String)}
      */
-    public static void onWelcomeResponse(JSONObject response) {
-        try {
-            String uuid = response.getString("uuid");
-            String message = response.getString("message");
+    public static void onWelcomeResponse(Message uuidMessage) {
+        String uuid = uuidMessage.getUuid();
+        String message = uuidMessage.getMessage();
 
-            Log.v(TAG, "UUID: " + uuid);
+        Log.v(TAG, "UUID: " + uuid);
 
-            SplashActivity splashActivity = SplashActivity.getInstance();
-            splashActivity.onLoadingFinish(uuid, message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        SplashActivity splashActivity = SplashActivity.getInstance();
+        splashActivity.onLoadingFinish(uuid, message);
     }
 
     /**
@@ -139,35 +137,31 @@ public class ChatMessageServices {
      * called whenever response from backend/placeDetails is received
      * response message
      *
-     * @param response json response from backend/placeDetails
+     * @param place json response from backend/placeDetails
      * @called_from: {@link ChatMessageClient#onGetResponse(HttpResponse)}
      * @calls: {@link MainActivity#onReceiveMessage(String)}
      */
-    public static void onDetailsResponse(JSONObject response) {
-        try {
-            MainActivity mainActivity = MainActivity.getInstance();
+    public static void onDetailsResponse(Place place) {
+        MainActivity mainActivity = MainActivity.getInstance();
 
-            String name = response.getString("name");
-            String distance = response.getString("distance");
-            String rating = response.getString("rating");
-            String type = response.getString("type");
-            String address = response.getString("address");
-            String mobileNumber = response.getString("mobile_number");
-            String link = response.getString("link");
+        String name = place.getName();
+        String distance = place.getDistance();
+        float rating = place.getRating();
+        String type = place.getType();
+        String address = place.getAddress();
+        String mobileNumber = place.getMobileNumber();
+        String link = place.getLink();
 
-            String message = "";
-            message += "<b>Name: </b>" + name + "<br>";
-            message += "<b>Distance: </b>" + distance + "<br>";
-            message += "<b>Rating: </b>" + rating + "<br>";
-            message += "<b>Type: </b>" + type + "<br>";
-            message += "<b>Address: </b>" + address + "<br>";
-            message += "<b>Mobile Number: </b>" + mobileNumber + "<br/><br/>";
-            message += "<b><font color=\"#1C78C6\"><a href=\"" + link + "\">Open in Google Maps</a></font></b>";
+        String message = "";
+        message += "<b>Name: </b>" + name + "<br>";
+        message += "<b>Distance: </b>" + distance + "<br>";
+        message += "<b>Rating: </b>" + rating + "<br>";
+        message += "<b>Type: </b>" + type + "<br>";
+        message += "<b>Address: </b>" + address + "<br>";
+        message += "<b>Mobile Number: </b>" + mobileNumber + "<br/><br/>";
+        message += "<b><font color=\"#1C78C6\"><a href=\"" + link + "\">Open in Google Maps</a></font></b>";
 
-            mainActivity.onReceiveMessage(message);
-            Log.v(TAG, "Message: " + message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        mainActivity.onReceiveMessage(message);
+        Log.v(TAG, "Message: " + message);
     }
 }
