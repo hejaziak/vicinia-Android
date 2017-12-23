@@ -17,8 +17,7 @@ import com.example.vicinia.models.ChatMessage;
 
 public class ChatHistoryFragment extends Fragment {
     private ChatMessage lastMessage = null;
-
-    MainActivity parent;
+    private MainActivity parent;
     private ChatMessageAdapter adapter;
     private ListView mChatHistory;
 
@@ -61,7 +60,7 @@ public class ChatHistoryFragment extends Fragment {
 
     public void sendTypingMessage(String initialMessage) {
         initialMessage = "<i>" + initialMessage + "</i>";
-        
+
         if (lastMessage != null) {
             lastMessage.setContent(initialMessage);
 
