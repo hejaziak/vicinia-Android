@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        uuid = getIntent().getStringExtra("UUID");
+
         instance = this;
         fragmentManager = getSupportFragmentManager();
         gpsServices = new GpsServices(this);
@@ -61,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
         //hide keyboard at startup
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        String welcomeMessage = getIntent().getStringExtra("WELCOME_MESSAGE");
+        onReceiveMessage(welcomeMessage);
     }
 
     /**

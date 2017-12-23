@@ -68,6 +68,7 @@ public class SplashActivity extends Activity {
             public void onResponse(Call<Message> call, Response<Message> response) {
                 if (response.isSuccessful()) {
                     Message welcomeMessage = response.body();
+
                     String uuid = welcomeMessage.getUuid();
                     String message = welcomeMessage.getMessage();
                     onLoadingFinish(uuid, message);
@@ -91,26 +92,11 @@ public class SplashActivity extends Activity {
      * @calls: {@link #onStop()} indirectly
      */
     public void onLoadingFinish(String uuid, String message) {
-        this.uuid = uuid;
-        this.welcomeMessage = message;
-
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("UUID", uuid);
+        intent.putExtra("WELCOME_MESSAGE", message);
         startActivity(intent);
         finish();
-    }
-
-    /**
-     * callback function when activity is stopped
-     * we set the mainActivities uuid & welcome message here
-     */
-    @Override
-    protected void onStop() {
-        if (isConnectedToInternet(this)) {
-            MainActivity mainActivity = MainActivity.getInstance();
-            mainActivity.setUuid(uuid);
-            mainActivity.onReceiveMessage(welcomeMessage);
-        }
-        super.onStop();
     }
 
     /**
