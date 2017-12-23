@@ -1,4 +1,6 @@
-package com.example.vicinia.clients;
+package com.example.vicinia.utilities;
+
+import com.example.vicinia.clients.ApiInterface;
 
 import java.util.concurrent.TimeUnit;
 
@@ -6,7 +8,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ApiClient {
+public class ApiUtilities {
 
 //    private final static String BACKEND_BASE_URL = "https://vicinia.herokuapp.com";
     private final static String BACKEND_BASE_URL = "http://10.0.2.2:8080";

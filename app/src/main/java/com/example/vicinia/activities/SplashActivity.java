@@ -7,16 +7,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.vicinia.MainActivity;
-import com.example.vicinia.clients.ApiClient;
-import com.example.vicinia.models.ApiMessage;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.example.vicinia.services.ApiServices;
 
 import static com.example.vicinia.utilities.ConnectivityUtilities.isConnectedToInternet;
 import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogBuider;
@@ -44,29 +38,9 @@ public class SplashActivity extends Activity {
         }
 
         if (isConnectedToInternet(this))
-            getWelcome();
+            ApiServices.getWelcome(this);
         else
             internetErrorDialogBuider(this);
-    }
-
-    public void getWelcome() {
-        ApiClient.getClient().getWelcome().enqueue(new Callback<ApiMessage>() {
-            @Override
-            public void onResponse(Call<ApiMessage> call, Response<ApiMessage> response) {
-                if (response.isSuccessful()) {
-                    ApiMessage welcomeMessage = response.body();
-
-                    String uuid = welcomeMessage.getUuid();
-                    String message = welcomeMessage.getMessage();
-                    onLoadingFinish(uuid, message);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiMessage> call, Throwable t) {
-                Log.e(TAG, t.toString());
-            }
-        });
     }
 
     /**
@@ -75,7 +49,7 @@ public class SplashActivity extends Activity {
      * @param uuid    uuid from /welcome response
      * @param message message from /welcome response
      *
-     * @called_from: {@link ChatMessageServices#onWelcomeResponse(ApiMessage)}
+     * @called_from: {@link ApiServices#getWelcome(SplashActivity)}
      * @calls: {@link #onStop()} indirectly
      */
     public void onLoadingFinish(String uuid, String message) {

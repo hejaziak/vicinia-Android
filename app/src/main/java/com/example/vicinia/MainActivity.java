@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -12,19 +11,12 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.example.vicinia.activities.SplashActivity;
-import com.example.vicinia.clients.ApiClient;
 import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.fragments.ChatMessageFragment;
 import com.example.vicinia.fragments.QuickActionFragment;
-import com.example.vicinia.models.ApiMessage;
-import com.example.vicinia.models.Place;
+import com.example.vicinia.services.ApiServices;
 import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.DialogUtilities;
-import com.google.gson.Gson;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.example.vicinia.utilities.DialogUtilities.gpsErrorBuilder;
 import static com.example.vicinia.utilities.DialogUtilities.helpDialogBuilder;
@@ -215,6 +207,18 @@ public class MainActivity extends AppCompatActivity {
         fChatHistory.sendTypingMessage("Getting nearby restaurants...");
     }
 
+    public void sendChatMessage(String message){
+        String lat = String.valueOf(gpsServices.getLatitude());
+        String lng = String.valueOf(gpsServices.getLongitude());
+
+        if(lat.equals("0.0") || lng.equals("0.0")) {
+            onGpsError();
+            return;
+        }
+            System.out.println(lat);
+        ApiServices.postChat(this, uuid, lat, lng, message);
+    }
+
     /**
      * called whenever details button is pressed
      * @param placeID id of place in interest
@@ -226,68 +230,13 @@ public class MainActivity extends AppCompatActivity {
         double lat = gpsServices.getLatitude();
         double lng = gpsServices.getLongitude();
 
-        ApiClient.getClient().getDetails(uuid, placeID, lat, lng).enqueue(new Callback<Place>() {
-            @Override
-            public void onResponse(Call<Place> call, Response<Place> response) {
-                if (response.isSuccessful()) {
-                    Place place = response.body();
-
-                    String name = place.getName();
-                    String distance = place.getDistance();
-                    float rating = place.getRating();
-                    String type = place.getType();
-                    String address = place.getAddress();
-                    String mobileNumber = place.getMobileNumber();
-                    String link = place.getLink();
-
-                    String message = "";
-                    message += "<b>Name: </b>" + name + "<br>";
-                    message += "<b>Distance: </b>" + distance + "<br>";
-                    message += "<b>Rating: </b>" + rating + "<br>";
-                    message += "<b>Type: </b>" + type + "<br>";
-                    message += "<b>Address: </b>" + address + "<br>";
-                    message += "<b>Mobile Number: </b>" + mobileNumber + "<br/><br/>";
-                    message += "<b><font color=\"#1C78C6\"><a href=\"" + link + "\">Open in Google Maps</a></font></b>";
-
-                    onReceiveMessage(message);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Place> call, Throwable t) {
-                Log.e(TAG, t.toString());
-            }
-        });
+        if(lat == 0 || lng == 0){
+            onGpsError();
+            return;
+        }
+        ApiServices.getDetails(this, uuid, placeID, lat, lng);
 
         fChatHistory.sendTypingMessage();
-    }
-
-    public void sendChatMessage(String message){
-        String lat = String.valueOf(gpsServices.getLatitude());
-        String lng = String.valueOf(gpsServices.getLongitude());
-
-        ApiMessage chatMessage = new ApiMessage(lat, lng, message);
-        ApiClient.getClient().postChat(uuid, chatMessage).enqueue(new Callback<ApiMessage>() {
-            @Override
-            public void onResponse(Call<ApiMessage> call, Response<ApiMessage> response) {
-                if (response.isSuccessful()) {
-                    ApiMessage message = response.body();
-
-                    if(message.getList() != null){
-                        Gson gson = new Gson();
-                        message.setMessage(gson.toJson(message.getList()));
-                    }
-
-                    System.out.println(message.getMessage());
-                    onReceiveMessage(message.getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiMessage> call, Throwable t) {
-                Log.e(TAG, t.toString());
-            }
-        });
     }
 
     public void onInternetError() {
@@ -297,12 +246,4 @@ public class MainActivity extends AppCompatActivity {
     public void onGpsError() { gpsErrorBuilder(this); }
 
     public ChatMessageFragment getChatMessageFragment() { return fChatMessage; }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 }
