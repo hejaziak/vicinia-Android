@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.clients.ApiClient;
-import com.example.vicinia.models.Message;
+import com.example.vicinia.models.ApiMessage;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,11 +50,11 @@ public class SplashActivity extends Activity {
     }
 
     public void getWelcome() {
-        ApiClient.getClient().getWelcome().enqueue(new Callback<Message>() {
+        ApiClient.getClient().getWelcome().enqueue(new Callback<ApiMessage>() {
             @Override
-            public void onResponse(Call<Message> call, Response<Message> response) {
+            public void onResponse(Call<ApiMessage> call, Response<ApiMessage> response) {
                 if (response.isSuccessful()) {
-                    Message welcomeMessage = response.body();
+                    ApiMessage welcomeMessage = response.body();
 
                     String uuid = welcomeMessage.getUuid();
                     String message = welcomeMessage.getMessage();
@@ -63,7 +63,7 @@ public class SplashActivity extends Activity {
             }
 
             @Override
-            public void onFailure(Call<Message> call, Throwable t) {
+            public void onFailure(Call<ApiMessage> call, Throwable t) {
                 Log.e(TAG, t.toString());
             }
         });
@@ -75,7 +75,7 @@ public class SplashActivity extends Activity {
      * @param uuid    uuid from /welcome response
      * @param message message from /welcome response
      *
-     * @called_from: {@link ChatMessageServices#onWelcomeResponse(Message)}
+     * @called_from: {@link ChatMessageServices#onWelcomeResponse(ApiMessage)}
      * @calls: {@link #onStop()} indirectly
      */
     public void onLoadingFinish(String uuid, String message) {

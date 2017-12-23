@@ -3,7 +3,7 @@ package com.example.vicinia.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Message {
+public class ApiMessage {
 
     @SerializedName("uuid")
     @Expose
@@ -29,7 +29,7 @@ public class Message {
      * No args constructor for use in serialization
      *
      */
-    public Message() {
+    public ApiMessage() {
     }
 
     /**
@@ -37,7 +37,7 @@ public class Message {
      * @param message   message from/to server
      * @param uuid      user's unique ID
      */
-    public Message(String uuid, String message) {
+    public ApiMessage(String uuid, String message) {
         this.uuid = uuid;
         this.message = message;
     }
@@ -46,7 +46,7 @@ public class Message {
      *
      * @param message   message from/to server
      */
-    public Message(String latitude, String longitude, String message) {
+    public ApiMessage(String latitude, String longitude, String message) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.message = message;

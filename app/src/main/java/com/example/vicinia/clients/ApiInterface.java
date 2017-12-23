@@ -1,6 +1,6 @@
 package com.example.vicinia.clients;
 
-import com.example.vicinia.models.Message;
+import com.example.vicinia.models.ApiMessage;
 import com.example.vicinia.models.Place;
 
 import retrofit2.Call;
@@ -13,7 +13,7 @@ import retrofit2.http.Path;
 public interface ApiInterface {
 
     @GET("/welcome")
-    Call<Message> getWelcome();
+    Call<ApiMessage> getWelcome();
 
     @GET("/placeDetails/{placeID}/{latitude}/{longitude}")
     Call<Place> getDetails(
@@ -24,8 +24,8 @@ public interface ApiInterface {
     );
 
     @POST("/chat")
-    Call<Message> postChat(
+    Call<ApiMessage> postChat(
             @Header("Authorization") String uuid,
-            @Body Message message
+            @Body ApiMessage message
     );
 }

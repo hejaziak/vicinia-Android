@@ -16,7 +16,7 @@ import com.example.vicinia.clients.ApiClient;
 import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.fragments.ChatMessageFragment;
 import com.example.vicinia.fragments.QuickActionFragment;
-import com.example.vicinia.models.Message;
+import com.example.vicinia.models.ApiMessage;
 import com.example.vicinia.models.Place;
 import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.DialogUtilities;
@@ -266,12 +266,12 @@ public class MainActivity extends AppCompatActivity {
         String lat = String.valueOf(gpsServices.getLatitude());
         String lng = String.valueOf(gpsServices.getLongitude());
 
-        Message chatMessage = new Message(lat, lng, message);
-        ApiClient.getClient().postChat(uuid, chatMessage).enqueue(new Callback<Message>() {
+        ApiMessage chatMessage = new ApiMessage(lat, lng, message);
+        ApiClient.getClient().postChat(uuid, chatMessage).enqueue(new Callback<ApiMessage>() {
             @Override
-            public void onResponse(Call<Message> call, Response<Message> response) {
+            public void onResponse(Call<ApiMessage> call, Response<ApiMessage> response) {
                 if (response.isSuccessful()) {
-                    Message message = response.body();
+                    ApiMessage message = response.body();
 
                     if(message.getList() != null){
                         Gson gson = new Gson();
@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Message> call, Throwable t) {
+            public void onFailure(Call<ApiMessage> call, Throwable t) {
                 Log.e(TAG, t.toString());
             }
         });
