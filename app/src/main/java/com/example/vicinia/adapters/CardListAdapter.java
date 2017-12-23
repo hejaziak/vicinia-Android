@@ -24,10 +24,11 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
     private static final String TAG = "VICINIA/CardListAdapter";
 
     //list of places
+    private MainActivity parent;
     private List<String[]> places;
 
-    CardListAdapter(List<String[]> places) {
-        this.places = places;
+    CardListAdapter(List<String[]> places, MainActivity activity) {
+        parent = activity; this.places = places;
     }
 
     /**
@@ -77,7 +78,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                 Button btn = (Button) v;
                 String placeID = (String) btn.getTag();
 
-                MainActivity.getInstance().onGetDetailsButton(placeID);
+                parent.onGetDetailsButton(placeID);
             }
         });
 

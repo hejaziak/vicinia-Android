@@ -33,8 +33,6 @@ import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogB
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "VICINIA/MainActivity";
 
-    public static MainActivity instance;
-
     public GpsServices gpsServices;
     private FragmentManager fragmentManager;
 
@@ -58,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         uuid = getIntent().getStringExtra("UUID");
 
-        instance = this;
         fragmentManager = getSupportFragmentManager();
         gpsServices = new GpsServices(this);
 
@@ -307,9 +304,5 @@ public class MainActivity extends AppCompatActivity {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    public static MainActivity getInstance() {
-        return instance;
     }
 }

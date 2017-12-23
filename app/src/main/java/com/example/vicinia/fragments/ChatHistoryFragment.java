@@ -18,6 +18,7 @@ import com.example.vicinia.models.ChatMessage;
 public class ChatHistoryFragment extends Fragment {
     private ChatMessage lastMessage = null;
 
+    MainActivity parent;
     private ChatMessageAdapter adapter;
     private ListView mChatHistory;
 
@@ -29,17 +30,18 @@ public class ChatHistoryFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mChatHistory = view.findViewById(R.id.chat_history);
+        parent = (MainActivity) getActivity();
 
         //configure list view
-        adapter = new ChatMessageAdapter(getActivity());
+        adapter = new ChatMessageAdapter(parent);
         mChatHistory.setAdapter(adapter);
 
         // Hiding keyboard upon touching the screen
         mChatHistory.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                InputMethodManager imm = (InputMethodManager) MainActivity.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(MainActivity.getInstance().getChatMessageFragment().getmChatMessage().getWindowToken(), 0);
+                InputMethodManager imm = (InputMethodManager) parent.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(parent.getChatMessageFragment().getmChatMessage().getWindowToken(), 0);
 
                 return false;
             }

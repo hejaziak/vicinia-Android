@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
 import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.models.ChatMessage;
@@ -27,14 +28,16 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
     private static final String TAG = "VICINIA/ChatAdapter";
 
     //list of messages
+    private MainActivity parent;
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     // components of the {@link layout#left_meesage}
     private TextView mMessageTextView;
     private RecyclerView mCardRecyclerView;
 
-    public ChatMessageAdapter(Context context) {
+    public ChatMessageAdapter(MainActivity context) {
         super(context, R.layout.right_message);
+        parent = context;
     }
 
     /**
@@ -113,7 +116,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             //2. create a recycler adapter
             List<String[]> mCardList = new ArrayList<>();
-            CardListAdapter adapter = new CardListAdapter(mCardList);
+            CardListAdapter adapter = new CardListAdapter(mCardList, this.parent);
 
             //3. configure the recycler view with the layout manager and adapter
             mCardRecyclerView.setHasFixedSize(true);
