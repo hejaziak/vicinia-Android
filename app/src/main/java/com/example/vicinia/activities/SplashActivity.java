@@ -8,13 +8,21 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.vicinia.MainActivity;
+import com.example.vicinia.clients.ApiClient;
+import com.example.vicinia.clients.ApiInterface;
+import com.example.vicinia.pojos.Message;
 import com.example.vicinia.services.ChatMessageServices;
 import com.example.vicinia.utilities.DialogUtilities;
 
 import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.vicinia.services.ChatMessageServices.getWelcome;
 import static com.example.vicinia.utilities.ConnectivityUtilities.isConnectedToInternet;
@@ -28,10 +36,8 @@ public class SplashActivity extends Activity {
 
     static SplashActivity instance;
 
-    //place holder for /welcome responses
-    private String uuid;
-    private String welcomeMessage;
-
+    private ApiInterface mClient;
+    
     /**
      * callback function when activity is being created
      *
@@ -41,6 +47,7 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         instance = this;
+        mClient = ApiClient.getClient();
 
         //check if permissions are granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -55,13 +62,32 @@ public class SplashActivity extends Activity {
             internetErrorDialogBuider(this);
     }
 
+    public void getWelcome() {
+        mClient.getWelcome().enqueue(new Callback<Message>() {
+            @Override
+            public void onResponse(Call<Message> call, Response<Message> response) {
+                if (response.isSuccessful()) {
+                    Message welcomeMessage = response.body();
+                    String uuid = welcomeMessage.getUuid();
+                    String message = welcomeMessage.getMessage();
+                    onLoadingFinish(uuid, message);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Message> call, Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
+    }
+
     /**
      * called when /welcome response then starts the main activity
      *
      * @param uuid    uuid from /welcome response
      * @param message message from /welcome response
      *
-     * @called_from: {@link ChatMessageServices#onWelcomeResponse(JSONObject)}
+     * @called_from: {@link ChatMessageServices#onWelcomeResponse(Message)}
      * @calls: {@link #onStop()} indirectly
      */
     public void onLoadingFinish(String uuid, String message) {
