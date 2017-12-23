@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,14 +12,21 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.example.vicinia.activities.SplashActivity;
+import com.example.vicinia.clients.ApiClient;
 import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.fragments.ChatMessageFragment;
 import com.example.vicinia.fragments.QuickActionFragment;
+import com.example.vicinia.models.Message;
+import com.example.vicinia.models.Place;
 import com.example.vicinia.services.ChatMessageServices;
 import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.DialogUtilities;
 
 import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.vicinia.services.ChatMessageServices.getDetails;
 import static com.example.vicinia.utilities.DialogUtilities.gpsErrorBuilder;
@@ -226,7 +234,39 @@ public class MainActivity extends AppCompatActivity {
     public void onGetDetailsButton(String placeID) {
         double lat = gpsServices.getLatitude();
         double lng = gpsServices.getLongitude();
-        getDetails(placeID, lat, lng);
+
+        ApiClient.getClient().getDetails(uuid, placeID, lat, lng).enqueue(new Callback<Place>() {
+            @Override
+            public void onResponse(Call<Place> call, Response<Place> response) {
+                if (response.isSuccessful()) {
+                    Place place = response.body();
+
+                    String name = place.getName();
+                    String distance = place.getDistance();
+                    float rating = place.getRating();
+                    String type = place.getType();
+                    String address = place.getAddress();
+                    String mobileNumber = place.getMobileNumber();
+                    String link = place.getLink();
+
+                    String message = "";
+                    message += "<b>Name: </b>" + name + "<br>";
+                    message += "<b>Distance: </b>" + distance + "<br>";
+                    message += "<b>Rating: </b>" + rating + "<br>";
+                    message += "<b>Type: </b>" + type + "<br>";
+                    message += "<b>Address: </b>" + address + "<br>";
+                    message += "<b>Mobile Number: </b>" + mobileNumber + "<br/><br/>";
+                    message += "<b><font color=\"#1C78C6\"><a href=\"" + link + "\">Open in Google Maps</a></font></b>";
+
+                    onReceiveMessage(message);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Place> call, Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
 
         fChatHistory.sendTypingMessage();
     }
