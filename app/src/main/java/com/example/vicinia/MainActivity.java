@@ -18,18 +18,14 @@ import com.example.vicinia.fragments.ChatMessageFragment;
 import com.example.vicinia.fragments.QuickActionFragment;
 import com.example.vicinia.models.Message;
 import com.example.vicinia.models.Place;
-import com.example.vicinia.services.ChatMessageServices;
 import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.DialogUtilities;
 import com.google.gson.Gson;
-
-import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.vicinia.services.ChatMessageServices.getDetails;
 import static com.example.vicinia.utilities.DialogUtilities.gpsErrorBuilder;
 import static com.example.vicinia.utilities.DialogUtilities.helpDialogBuilder;
 import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogBuider;
@@ -153,8 +149,6 @@ public class MainActivity extends AppCompatActivity {
      * @param message message to be sent
      *
      * @called_from: {@link SplashActivity#onStop()}
-     *               {@link ChatMessageServices#onChatResponse(JSONObject)}
-     *               {@link ChatMessageServices#onDetailsResponse(JSONObject)}
      * @calls:       {@link ChatHistoryFragment#onReceiveMessage(String)}
      */
     public void onReceiveMessage(String message) {
@@ -229,8 +223,7 @@ public class MainActivity extends AppCompatActivity {
      * @param placeID id of place in interest
      *
      * @called_from: none
-     * @calls:  {@link ChatMessageServices#getDetails(String, double, double)}
-     *          {@link ChatHistoryFragment#sendTypingMessage()}
+     * @calls:  {@link ChatHistoryFragment#sendTypingMessage()}
      */
     public void onGetDetailsButton(String placeID) {
         double lat = gpsServices.getLatitude();
@@ -287,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         message.setMessage(gson.toJson(message.getList()));
                     }
-                    
+
                     System.out.println(message.getMessage());
                     onReceiveMessage(message.getMessage());
                 }

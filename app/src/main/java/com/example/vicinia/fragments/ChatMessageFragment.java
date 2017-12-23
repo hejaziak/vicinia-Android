@@ -10,9 +10,6 @@ import android.widget.ImageButton;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
-import com.example.vicinia.utilities.UrlUtilities;
-
-import static com.example.vicinia.services.ChatMessageServices.sendChatMessage;
 
 public class ChatMessageFragment extends Fragment {
     private MainActivity parent;

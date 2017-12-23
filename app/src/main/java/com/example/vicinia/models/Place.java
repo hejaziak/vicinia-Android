@@ -1,4 +1,4 @@
-package com.example.vicinia.pojos;
+package com.example.vicinia.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

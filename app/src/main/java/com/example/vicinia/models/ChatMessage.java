@@ -1,4 +1,4 @@
-package com.example.vicinia.pojos;
+package com.example.vicinia.models;
 
 import android.view.View;
 import android.view.ViewGroup;

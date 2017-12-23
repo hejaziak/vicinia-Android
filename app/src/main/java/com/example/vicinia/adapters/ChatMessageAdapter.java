@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.example.vicinia.R;
 import com.example.vicinia.fragments.ChatHistoryFragment;
-import com.example.vicinia.pojos.ChatMessage;
+import com.example.vicinia.models.ChatMessage;
 
 import org.json.JSONArray;
 import org.json.JSONException;

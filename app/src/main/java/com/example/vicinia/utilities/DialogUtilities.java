@@ -1,5 +1,6 @@
 package com.example.vicinia.utilities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -9,7 +10,6 @@ import android.view.MenuItem;
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
 import com.example.vicinia.activities.SplashActivity;
-import com.example.vicinia.pojos.HttpResponse;
 
 /**
  * home of the Dialog builders
@@ -45,26 +45,21 @@ public class DialogUtilities {
     /**
      * used to build error dialog when there is no internet
      *
-     * @param context is a reference to the calling activity, used when creating the dialog
+     * @param activity is a reference to the calling activity, used when creating the dialog
      * @called_from: {@link MainActivity#onInternetError()}
      * {@link SplashActivity#onCreate(Bundle)}
      * {@link com.example.vicinia.clients.ChatMessageClient#onGetResponse(HttpResponse)}
      * {@link com.example.vicinia.clients.ChatMessageClient#onPostResponse(HttpResponse)}
      * @calls: none
      */
-    public static void internetErrorDialogBuider(Context context){
-        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+    public static void internetErrorDialogBuider(final Activity activity){
+        AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
         alertDialog.setTitle("Check your internet connectivity");
         alertDialog.setMessage("I couldn't connect to the internet 😔, please make sure there's an active connection");
         alertDialog.setIcon(R.drawable.ic_warning_grey_24dp);
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        try{
-                            MainActivity.getInstance().finish();
-                        } catch (NullPointerException e){
-                            SplashActivity.getInstance().finish();
-                        }
+                    public void onClick(DialogInterface dialog, int which) {activity.finish();
                     }
                 });
         alertDialog.show();

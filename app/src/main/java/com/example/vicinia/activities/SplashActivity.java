@@ -12,8 +12,7 @@ import android.widget.Toast;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.clients.ApiClient;
-import com.example.vicinia.pojos.Message;
-import com.example.vicinia.services.ChatMessageServices;
+import com.example.vicinia.models.Message;
 
 import retrofit2.Call;
 import retrofit2.Callback;

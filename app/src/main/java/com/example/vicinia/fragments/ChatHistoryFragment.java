@@ -13,7 +13,7 @@ import android.widget.ListView;
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
 import com.example.vicinia.adapters.ChatMessageAdapter;
-import com.example.vicinia.pojos.ChatMessage;
+import com.example.vicinia.models.ChatMessage;
 
 public class ChatHistoryFragment extends Fragment {
     private ChatMessage lastMessage = null;

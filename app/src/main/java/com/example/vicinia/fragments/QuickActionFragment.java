@@ -10,8 +10,6 @@ import android.widget.ImageButton;
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
 
-import static com.example.vicinia.services.ChatMessageServices.sendChatMessage;
-
 public class QuickActionFragment extends Fragment{
     public enum QUICK_ACTIONS {CINEMA, RESTAURANT, GAS_STATION, HOSPITAL}
 
