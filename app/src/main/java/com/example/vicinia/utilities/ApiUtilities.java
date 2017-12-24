@@ -10,8 +10,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiUtilities {
 
-//    private final static String BACKEND_BASE_URL = "https://vicinia.herokuapp.com";
-    private final static String BACKEND_BASE_URL = "http://10.0.2.2:8080";
+   private final static String BACKEND_BASE_URL = "https://vicinia.herokuapp.com";
+    // private final static String BACKEND_BASE_URL = "http://10.0.2.2:8080";
 
     private static Retrofit retrofit = null;
 
