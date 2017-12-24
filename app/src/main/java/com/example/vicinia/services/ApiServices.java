@@ -4,10 +4,9 @@ import android.util.Log;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.activities.SplashActivity;
-import com.example.vicinia.utilities.ApiUtilities;
 import com.example.vicinia.models.ApiMessage;
 import com.example.vicinia.models.Place;
-import com.google.gson.Gson;
+import com.example.vicinia.utilities.ApiUtilities;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,7 +59,9 @@ public class ApiServices {
                     message += "<b>Mobile Number: </b>" + mobileNumber + "<br/><br/>";
                     message += "<b><font color=\"#1C78C6\"><a href=\"" + link + "\">Open in Google Maps</a></font></b>";
 
-                    mainActivity.onReceiveMessage(message);
+                    ApiMessage detailsMessage = new ApiMessage();
+                    detailsMessage.setMessage(message);
+                    mainActivity.onReceiveMessage(detailsMessage);
                 }
             }
 
@@ -79,14 +80,7 @@ public class ApiServices {
             public void onResponse(Call<ApiMessage> call, Response<ApiMessage> response) {
                 if (response.isSuccessful()) {
                     ApiMessage message = response.body();
-
-                    if(message.getList() != null){
-                        Gson gson = new Gson();
-                        message.setMessage(gson.toJson(message.getList()));
-                    }
-
-                    System.out.println(message.getMessage());
-                    mainActivity.onReceiveMessage(message.getMessage());
+                    mainActivity.onReceiveMessage(message);
                 }
             }
 

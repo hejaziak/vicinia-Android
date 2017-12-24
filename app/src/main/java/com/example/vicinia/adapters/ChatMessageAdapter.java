@@ -1,6 +1,5 @@
 package com.example.vicinia.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -16,12 +15,10 @@ import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
 import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.models.ChatMessage;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.vicinia.models.Place;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
@@ -115,7 +112,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
             //2. create a recycler adapter
-            List<String[]> mCardList = new ArrayList<>();
+            List<Place> mCardList = new ArrayList<>();
             CardListAdapter adapter = new CardListAdapter(mCardList, this.parent);
 
             //3. configure the recycler view with the layout manager and adapter
@@ -128,8 +125,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             mMessageTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
             //if content is a JSONArray
-            if (inMessage.charAt(0) == '[')
-                return handleCardList(convertView, mCardList, inMessage);
+            if (message.getPlaces() != null)
+                return handleCardList(convertView, mCardList, message);
         } else {
             convertView = inflater.inflate(R.layout.right_message, parent, false);
             mMessageTextView = convertView.findViewById(R.id.text);
@@ -154,30 +151,17 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
      * @called_from: {@link #getView(int, View, ViewGroup)}
      * @calls: none
      */
-    private View handleCardList(View convertView, List<String[]> mCardList, String inMessage) {
+    private View handleCardList(View convertView, List<Place> mCardList, ChatMessage inMessage) {
         Log.v(TAG, "This is a JSON list");
 
         //load default reply message
         mMessageTextView.setText(R.string.chat_response);
 
-        try {
-            JSONArray jsonarray = new JSONArray(inMessage);
+        //add places to card list
+        Collections.addAll(mCardList, inMessage.getPlaces());
 
-            for (int i = 0; i < jsonarray.length(); i++) {
-                JSONObject jsonobject = jsonarray.getJSONObject(i);
-                String name = jsonobject.getString("name");
-                String distance = jsonobject.getString("distance");
-                String rating = jsonobject.getString("rating");
-                String id = jsonobject.getString("id");
-
-                String[] placeDetails = {name, distance, rating, id};
-                mCardList.add(placeDetails);
-            }
-
-            //notify adapter that we finished adding info
-            mCardRecyclerView.getAdapter().notifyDataSetChanged();
-        } catch (JSONException ignored) {
-        }
+        //notify adapter that we finished adding info
+        mCardRecyclerView.getAdapter().notifyDataSetChanged();
 
         return convertView;
     }

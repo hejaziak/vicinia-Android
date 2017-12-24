@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
 import com.example.vicinia.adapters.ChatMessageAdapter;
+import com.example.vicinia.models.ApiMessage;
 import com.example.vicinia.models.ChatMessage;
 
 public class ChatHistoryFragment extends Fragment {
@@ -73,14 +74,15 @@ public class ChatHistoryFragment extends Fragment {
         scrollDown();
     }
 
-    public void onReceiveMessage(String message) {
+    public void onReceiveMessage(ApiMessage message) {
         if (lastMessage != null) {
-            lastMessage.setContent(message);
+            lastMessage.setContent(message.getMessage());
+            lastMessage.setPlaces(message.getList());
             lastMessage = null;
 
             adapter.notifyDataSetChanged();
         } else {
-            ChatMessage newMessage = new ChatMessage(message, true);
+            ChatMessage newMessage = new ChatMessage(message.getMessage(), true, message.getList());
             adapter.add(newMessage);
         }
 

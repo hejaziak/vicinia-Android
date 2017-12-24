@@ -14,6 +14,7 @@ import com.example.vicinia.activities.SplashActivity;
 import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.fragments.ChatMessageFragment;
 import com.example.vicinia.fragments.QuickActionFragment;
+import com.example.vicinia.models.ApiMessage;
 import com.example.vicinia.services.ApiServices;
 import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.DialogUtilities;
@@ -58,7 +59,10 @@ public class MainActivity extends AppCompatActivity {
         //hide keyboard at startup
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        String welcomeMessage = getIntent().getStringExtra("WELCOME_MESSAGE");
+        String welcomeMessageContent = getIntent().getStringExtra("WELCOME_MESSAGE");
+
+        ApiMessage welcomeMessage = new ApiMessage();
+        welcomeMessage.setMessage(welcomeMessageContent);
         onReceiveMessage(welcomeMessage);
     }
 
@@ -140,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
      * @called_from: {@link SplashActivity#onStop()}
      * @calls:       {@link ChatHistoryFragment#onReceiveMessage(String)}
      */
-    public void onReceiveMessage(String message) {
+    public void onReceiveMessage(ApiMessage message) {
         fChatHistory.onReceiveMessage(message);
     }
 
