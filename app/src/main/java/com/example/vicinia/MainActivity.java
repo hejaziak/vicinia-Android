@@ -219,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
             onGpsError();
             return;
         }
-            System.out.println(lat);
         ApiServices.postChat(this, uuid, lat, lng, message);
     }
 

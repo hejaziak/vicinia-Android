@@ -10,12 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
 import com.example.vicinia.models.Place;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +79,12 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         cardViewHolder.placeRating.setText(String.valueOf(rating));
         cardViewHolder.placeRatingImg.setRating(rating);
 
+        Picasso.with(cardViewHolder.cardView.getContext())
+                .load("https://d1.awsstatic.com/icons/benefit-icons/100x100_benefit_dashboard.7a0b930f2712387591b2d365765d0e49c9074705.png")
+                .resize(50, 50)
+                .centerCrop()
+                .into(cardViewHolder.placeImg);
+
         //configure button
         cardViewHolder.placeID.setText(R.string.get_details_string);
         cardViewHolder.placeID.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +115,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         RatingBar placeRatingImg;
         Button placeID;
 
+        ImageView placeImg;
         CardViewHolder(View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.cv);
@@ -115,6 +124,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
             placeRating = itemView.findViewById(R.id.place_rating);
             placeRatingImg = itemView.findViewById(R.id.place_rating_img);
             placeID = itemView.findViewById(R.id.place_id);
+            placeImg = itemView.findViewById(R.id.place_image);
 
             //set star color to gold
             LayerDrawable stars = (LayerDrawable) placeRatingImg.getProgressDrawable();
