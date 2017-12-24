@@ -2,7 +2,6 @@ package com.example.vicinia.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -11,12 +10,8 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 
 import com.example.vicinia.MainActivity;
-import com.example.vicinia.services.ChatMessageServices;
-import com.example.vicinia.utilities.DialogUtilities;
+import com.example.vicinia.services.ApiServices;
 
-import org.json.JSONObject;
-
-import static com.example.vicinia.services.ChatMessageServices.getWelcome;
 import static com.example.vicinia.utilities.ConnectivityUtilities.isConnectedToInternet;
 import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogBuider;
 
@@ -26,12 +21,6 @@ public class SplashActivity extends Activity {
     //request identifier
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 33;
 
-    static SplashActivity instance;
-
-    //place holder for /welcome responses
-    private String uuid;
-    private String welcomeMessage;
-
     /**
      * callback function when activity is being created
      *
@@ -40,7 +29,6 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        instance = this;
 
         //check if permissions are granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -50,7 +38,7 @@ public class SplashActivity extends Activity {
         }
 
         if (isConnectedToInternet(this))
-            getWelcome();
+            ApiServices.getWelcome(this);
         else
             internetErrorDialogBuider(this);
     }
@@ -61,30 +49,16 @@ public class SplashActivity extends Activity {
      * @param uuid    uuid from /welcome response
      * @param message message from /welcome response
      *
-     * @called_from: {@link ChatMessageServices#onWelcomeResponse(JSONObject)}
+     * @called_from: {@link ApiServices#getWelcome(SplashActivity)}
      * @calls: {@link #onStop()} indirectly
      */
     public void onLoadingFinish(String uuid, String message) {
-        this.uuid = uuid;
-        this.welcomeMessage = message;
-
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("UUID", uuid);
+        intent.putExtra("WELCOME_MESSAGE", message);
         startActivity(intent);
-        finish();
-    }
 
-    /**
-     * callback function when activity is stopped
-     * we set the mainActivities uuid & welcome message here
-     */
-    @Override
-    protected void onStop() {
-        if (isConnectedToInternet(this)) {
-            MainActivity mainActivity = MainActivity.getInstance();
-            mainActivity.setUuid(uuid);
-            mainActivity.onReceiveMessage(welcomeMessage);
-        }
-        super.onStop();
+        finish();
     }
 
     /**
@@ -106,16 +80,5 @@ public class SplashActivity extends Activity {
 
                 break;
         }
-    }
-
-    /**
-     * @return instance of {@link SplashActivity}
-     *
-     * @called_from: {@link ChatMessageServices#onWelcomeResponse(JSONObject)}
-     * {@link DialogUtilities#internetErrorDialogBuider(Context)}
-     * @calls: none
-     */
-    public static SplashActivity getInstance() {
-        return instance;
     }
 }

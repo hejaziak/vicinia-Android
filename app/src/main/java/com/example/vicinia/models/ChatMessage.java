@@ -1,4 +1,4 @@
-package com.example.vicinia.pojos;
+package com.example.vicinia.models;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,7 @@ import com.example.vicinia.fragments.ChatHistoryFragment;
 public class ChatMessage {
     private String content;
     private boolean leftAligned;
+    private Place[] places;
 
     /**
      * @param content     the message
@@ -22,9 +23,13 @@ public class ChatMessage {
      * @calls: none
      */
     public ChatMessage(String content, boolean leftAligned) {
-        super();
         this.content = content;
         this.leftAligned = leftAligned;
+    }
+
+    public ChatMessage(String content, boolean leftAligned, Place[] places) {
+        this(content, leftAligned);
+        this.places = places;
     }
 
     /**
@@ -59,5 +64,13 @@ public class ChatMessage {
      */
     public boolean isLeftAligned() {
         return leftAligned;
+    }
+
+    public Place[] getPlaces() {
+        return places;
+    }
+
+    public void setPlaces(Place[] places) {
+        this.places = places;
     }
 }

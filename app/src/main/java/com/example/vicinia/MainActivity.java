@@ -14,21 +14,17 @@ import com.example.vicinia.activities.SplashActivity;
 import com.example.vicinia.fragments.ChatHistoryFragment;
 import com.example.vicinia.fragments.ChatMessageFragment;
 import com.example.vicinia.fragments.QuickActionFragment;
-import com.example.vicinia.services.ChatMessageServices;
+import com.example.vicinia.models.ApiMessage;
+import com.example.vicinia.services.ApiServices;
 import com.example.vicinia.services.GpsServices;
 import com.example.vicinia.utilities.DialogUtilities;
 
-import org.json.JSONObject;
-
-import static com.example.vicinia.services.ChatMessageServices.getDetails;
 import static com.example.vicinia.utilities.DialogUtilities.gpsErrorBuilder;
 import static com.example.vicinia.utilities.DialogUtilities.helpDialogBuilder;
 import static com.example.vicinia.utilities.DialogUtilities.internetErrorDialogBuider;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "VICINIA/MainActivity";
-
-    public static MainActivity instance;
 
     public GpsServices gpsServices;
     private FragmentManager fragmentManager;
@@ -51,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        instance = this;
+        uuid = getIntent().getStringExtra("UUID");
+
         fragmentManager = getSupportFragmentManager();
         gpsServices = new GpsServices(this);
 
@@ -61,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
         //hide keyboard at startup
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        String welcomeMessageContent = getIntent().getStringExtra("WELCOME_MESSAGE");
+
+        ApiMessage welcomeMessage = new ApiMessage();
+        welcomeMessage.setMessage(welcomeMessageContent);
+        onReceiveMessage(welcomeMessage);
     }
 
     /**
@@ -139,11 +142,9 @@ public class MainActivity extends AppCompatActivity {
      * @param message message to be sent
      *
      * @called_from: {@link SplashActivity#onStop()}
-     *               {@link ChatMessageServices#onChatResponse(JSONObject)}
-     *               {@link ChatMessageServices#onDetailsResponse(JSONObject)}
      * @calls:       {@link ChatHistoryFragment#onReceiveMessage(String)}
      */
-    public void onReceiveMessage(String message) {
+    public void onReceiveMessage(ApiMessage message) {
         fChatHistory.onReceiveMessage(message);
     }
 
@@ -210,18 +211,34 @@ public class MainActivity extends AppCompatActivity {
         fChatHistory.sendTypingMessage("Getting nearby restaurants...");
     }
 
+    public void sendChatMessage(String message){
+        String lat = String.valueOf(gpsServices.getLatitude());
+        String lng = String.valueOf(gpsServices.getLongitude());
+
+        if(lat.equals("0.0") || lng.equals("0.0")) {
+            onGpsError();
+            return;
+        }
+            System.out.println(lat);
+        ApiServices.postChat(this, uuid, lat, lng, message);
+    }
+
     /**
      * called whenever details button is pressed
      * @param placeID id of place in interest
      *
      * @called_from: none
-     * @calls:  {@link ChatMessageServices#getDetails(String, double, double)}
-     *          {@link ChatHistoryFragment#sendTypingMessage()}
+     * @calls:  {@link ChatHistoryFragment#sendTypingMessage()}
      */
     public void onGetDetailsButton(String placeID) {
         double lat = gpsServices.getLatitude();
         double lng = gpsServices.getLongitude();
-        getDetails(placeID, lat, lng);
+
+        if(lat == 0 || lng == 0){
+            onGpsError();
+            return;
+        }
+        ApiServices.getDetails(this, uuid, placeID, lat, lng);
 
         fChatHistory.sendTypingMessage();
     }
@@ -233,16 +250,4 @@ public class MainActivity extends AppCompatActivity {
     public void onGpsError() { gpsErrorBuilder(this); }
 
     public ChatMessageFragment getChatMessageFragment() { return fChatMessage; }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public static MainActivity getInstance() {
-        return instance;
-    }
 }

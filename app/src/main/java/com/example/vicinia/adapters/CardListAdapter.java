@@ -15,7 +15,9 @@ import android.widget.TextView;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
+import com.example.vicinia.models.Place;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.graphics.Color.rgb;
@@ -24,10 +26,11 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
     private static final String TAG = "VICINIA/CardListAdapter";
 
     //list of places
-    private List<String[]> places;
+    private MainActivity parent;
+    private List<Place> places;
 
-    CardListAdapter(List<String[]> places) {
-        this.places = places;
+    CardListAdapter(List<Place> places, MainActivity activity) {
+        parent = activity; this.places = places;
     }
 
     /**
@@ -63,25 +66,26 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
     public void onBindViewHolder(CardViewHolder cardViewHolder, int i) {
         Log.v(TAG, "onBind " + i);
 
-        String[] place = places.get(i);
-        cardViewHolder.placeName.setText(Html.fromHtml("<b>" + place[0] + "<\\b>"));
-        cardViewHolder.placeDistance.setText(place[1]);
-        cardViewHolder.placeRating.setText(place[2]);
-        cardViewHolder.placeRatingImg.setRating(Float.parseFloat(place[2]));
+        Place place = places.get(i);
+        String name = place.getName();
+        String distance = place.getDistance();
+        float rating = place.getRating();
+        final String placeID = place.getId();
+
+        cardViewHolder.placeName.setText(Html.fromHtml("<b>" + name + "<\\b>"));
+        cardViewHolder.placeDistance.setText(distance);
+        cardViewHolder.placeRating.setText(String.valueOf(rating));
+        cardViewHolder.placeRatingImg.setRating(rating);
 
         //configure button
         cardViewHolder.placeID.setText(R.string.get_details_string);
-        cardViewHolder.placeID.setTag(place[3]);
         cardViewHolder.placeID.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Button btn = (Button) v;
-                String placeID = (String) btn.getTag();
-
-                MainActivity.getInstance().onGetDetailsButton(placeID);
+                parent.onGetDetailsButton(placeID);
             }
         });
 
-        Log.v(TAG, place[0] + " " + place[1] + " " + place[2] + " " + place[3]);
+        Log.v(TAG, name + " " + distance + " " + rating + " " + placeID);
     }
 
     /**

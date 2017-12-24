@@ -10,9 +10,6 @@ import android.widget.ImageButton;
 
 import com.example.vicinia.MainActivity;
 import com.example.vicinia.R;
-import com.example.vicinia.utilities.UrlUtilities;
-
-import static com.example.vicinia.services.ChatMessageServices.sendChatMessage;
 
 public class ChatMessageFragment extends Fragment {
     private MainActivity parent;
@@ -48,10 +45,7 @@ public class ChatMessageFragment extends Fragment {
         parent.onSendMessage(message);
 
         // For the api
-        double lat = parent.gpsServices.getLatitude();
-        double lng = parent.gpsServices.getLongitude();
-
-        sendChatMessage(message, lat, lng);
+        parent.sendChatMessage(message);
     }
 
     public EditText getmChatMessage() {
